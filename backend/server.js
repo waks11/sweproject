@@ -1,7 +1,15 @@
-require('dotenv').config()
+import dotenv from "dotenv";
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
 
-const express = require('express');
-const cors = require('cors');
+import userRouter from "./routes/userLogin.js";
+
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const cors = require('cors');
+
+dotenv.config();
 
 const app = express();
 
@@ -12,10 +20,27 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
-    res.json({mssg: 'Welcome'})
+app.use((req, res, next) => {
+    console.log(req.path, res.method);
+    next()
 });
 
-app.listen(process.env.PORT, () => {
-    console.log("listening on port", process.env.PORT)
+app.use('/api/users', userRouter);
+
+// app.get('/', (req, res) => {
+//     res.json({mssg: 'Welcome'})
+// });
+
+const connectionString = process.env.MONGO_URI;
+
+mongoose.connect(connectionString).then(() => {
+    
+    console.log("Connected to DB");
+
+    app.listen(process.env.PORT, () => {
+        console.log("Listening on Port", process.env.PORT)
+    });
+
+}).catch((error) => {
+    console.log(error);
 });

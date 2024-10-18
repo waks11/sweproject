@@ -4,10 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import userRouter from "./routes/userLogin.js";
-
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const cors = require('cors');
+import itemRouter from "./routes/lostItems.js";
 
 dotenv.config();
 
@@ -26,10 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/users', userRouter);
-
-// app.get('/', (req, res) => {
-//     res.json({mssg: 'Welcome'})
-// });
+app.use('/api/lostItems', itemRouter);
 
 const connectionString = process.env.MONGO_URI;
 

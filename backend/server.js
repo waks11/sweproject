@@ -3,8 +3,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import userRouter from "./routes/userLogin.js";
-import itemRouter from "./routes/lostItems.js";
+import userRouter from "./routes/userRouter.js";
+import itemRouter from "./routes/itemRouter.js";
 
 dotenv.config();
 

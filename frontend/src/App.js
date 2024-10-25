@@ -1,6 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import SearchPage from './pages/SearchPage'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import SearchPage from './pages/SearchPage';
+import SignUp from './pages/SignUp';  
 
 function App() {
   return (
@@ -8,10 +10,8 @@ function App() {
       <BrowserRouter>
         <div className="pages">
           <Routes>
-            <Route
-              path="/"
-              element={<SearchPage />}
-            />
+            <Route path="/" element={<SearchPage />} />
+            <Route path="/signup" element={<SignUp />} /> 
           </Routes>
         </div>
       </BrowserRouter>

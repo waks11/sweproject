@@ -12,6 +12,10 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
         navigate('/messages');
     };
 
+    const handleTruncate = (e) => {
+        e.currentTarget.classList.toggle('truncate');
+    };
+
     if(!items || items.length === 0) {
 
         return (
@@ -39,7 +43,10 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
                             className="w-[80%] h-[80%] object-cover"
                         />
                         <div className="flex justify-between items-center w-[90%] border border-blue-800 px-2 space-x-2 h-12 rounded-md">
-                            <p className="text-lg max-w-[85%] truncate flex items-center">
+                            <p 
+                                className="text-lg max-w-[85%] truncate flex items-center"
+                                onClick={handleTruncate}
+                            >
                                 {item.description}
                             </p>
                             <button onClick={handleClick}>

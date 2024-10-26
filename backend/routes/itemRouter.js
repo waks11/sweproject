@@ -4,7 +4,7 @@ import multerS3 from "multer-s3";
 import dotenv from "dotenv";
 import path from "path";
 import express from "express";
-import { createPost, getSemanticSearch } from "../controllers/lostItemController.js";
+import { createPost, getSemanticSearch, getImageUrl, getPaginatedItems } from "../controllers/lostItemController.js";
 
 import {v4 as uuidv4} from "uuid";
 
@@ -36,7 +36,9 @@ const upload = multer({
 
 });
 
-itemRouter.post('/upload', upload.single('appImage'), createPost);
+itemRouter.post('/upload', upload.single('lostImage'), createPost);
 itemRouter.get('/search/semantic', getSemanticSearch);
+itemRouter.get('/getImageUrl', getImageUrl);
+itemRouter.get('/getPage', getPaginatedItems);
 
 export default itemRouter;

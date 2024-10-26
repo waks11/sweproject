@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/userRouter.js";
 import itemRouter from "./routes/itemRouter.js";
@@ -11,11 +12,13 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    origin: "https://localhost:3000"
+    origin: "http://localhost:3000",
+    credentials: true,
 };
 
-app.use(express.json());
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
 
 app.use((req, res, next) => {
     console.log(req.path, res.method);

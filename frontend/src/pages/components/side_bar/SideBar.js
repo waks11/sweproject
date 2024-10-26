@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 //import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../UserContext'
 import logoImage from './icons/uf_logo.webp'
 import messageImage from './icons/message.webp'
 import accountImage from './icons/account.webp'
 import logoutImage from './icons/logout.webp'
+import axios from "axios";
 
 const Logo = () => {
     return (
@@ -58,8 +60,14 @@ const Account = () => {
 
 const Logout = () => {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
 
-    const handleClick = () => {
+    const handleClick = async () => {
+
+        await axios.post("/api/users/logout", { withCredentials : true });
+
+        setUser(null);
+
         navigate('/')
     };
 

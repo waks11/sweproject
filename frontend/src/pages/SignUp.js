@@ -1,10 +1,13 @@
 // src/pages/SignUp.js
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import logoImage from './components/side_bar/icons/uf_logo.webp';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,8 +25,20 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/signup', formData);
-      console.log(response.data); // Handle success (e.g., redirect, show message)
+      const response = await axios.post('/api/users/signup', formData, { withCredentials: true });
+      
+      if(response.data.error && response.data.error === "User Already Exists") {
+        toast.error(response.data.error);
+      }
+      else if(response.data.error) {
+        toast.error(response.data.error);
+      }
+      else {
+        toast.success("Signed Up Successfully");
+
+        navigate("/login");
+      }
+
     } catch (error) {
       console.error('Error signing up:', error.response?.data);
     }

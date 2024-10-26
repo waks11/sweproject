@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 import logoImage from './components/side_bar/icons/uf_logo.webp';
+import { UserContext } from './components/UserContext';
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -18,6 +22,30 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+
+      const response = await axios.post('/api/users/login', formData, { withCredentials: true });
+
+      if (response.data.error) {
+        toast.error("Login Failed. Please Try Again");
+      }
+      else {
+        toast.success("Logged in Successfully");
+        
+        setUser(response.data.user);
+
+        navigate('/');
+
+        // window.location.reload();
+      }
+
+    } catch (error) {
+
+      console.error("Error Logging In", error);
+      toast.error("Login Failed. Please Try Again");
+
+    }
 
     // On success,
     // <Navigate to="/"/>

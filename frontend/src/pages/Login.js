@@ -1,13 +1,10 @@
-// src/pages/SignUp.js
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import logoImage from './components/side_bar/icons/uf_logo.webp';
 
-const SignUp = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: ''
   });
@@ -21,15 +18,9 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/users/signup', formData);
-      console.log(response.data); // Handle success (e.g., redirect, show message)
-    } catch (error) {
-      console.error('Error signing up:', error.response?.data);
-    }
 
-    // On success, perform
-    // <Navigate to="/login"/>
+    // On success,
+    // <Navigate to="/"/>
   };
 
   return (
@@ -50,24 +41,6 @@ const SignUp = () => {
             onSubmit={handleSubmit}
             className="flex flex-col space-y-4"
           >
-            <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className="rounded-full p-1.5"
-            />
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              className="rounded-full p-1.5"
-            />
             <input
               type="email"
               name="email"
@@ -90,13 +63,13 @@ const SignUp = () => {
               type="submit"
               className="rounded-full bg-slate-900 rounded-full p-1.5 text-slate-100"
             >
-              Sign Up
+              Login
             </button>
             <Link 
-              to="/login"
+              to="/signup"
               className="hover:underline text-slate-200"
             >
-              Already have an account? Click to login.
+              Don't have an account? Click to create one.
             </Link>
           </form>
         </div>
@@ -105,4 +78,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

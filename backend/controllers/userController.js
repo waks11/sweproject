@@ -14,12 +14,19 @@ const createUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.create({
-            firstName, 
-            lastName, 
-            email, 
-            password: hashedPassword});
-        res.status(200).json(user);
+        try {
+            const user = await User.create({
+                firstName, 
+                lastName, 
+                email, 
+                password: hashedPassword});
+
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(400).json({ error: "User Already Exists"});
+        }
+        
+        
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -94,4 +101,19 @@ const getUserProfile = (req, res) => {
 
 }
 
-export { createUser, loginUser, getUserProfile };
+const signOutUser = async (req, res) => {
+
+    try {
+
+        res.clearCookie('token', { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production'});
+
+        return res.status(200).json({ message: "Signed Out Successfully "});
+    } catch (error) {
+        
+        return res.status(500).json({ error: error });
+
+    }
+
+}
+
+export { createUser, loginUser, getUserProfile, signOutUser };

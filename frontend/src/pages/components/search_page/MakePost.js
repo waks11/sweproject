@@ -1,24 +1,27 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
+import { UserContext } from '../UserContext';
 import imageImage from './icons/add_image.webp';
 
 const MakePost = ({onPost}) => {
+    const { user } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
     const [image, setImage] = useState(null);
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
-    const [userID, setUserID] = useState('');
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // setUserID() - need to set userID with the logged user
 
+        console.log(user);
+
         if(onPost) {
-            onPost({userID, image, description, location});
+            await onPost({userID: user.id, image, description, location});
         }
 
         setIsOpen(false);

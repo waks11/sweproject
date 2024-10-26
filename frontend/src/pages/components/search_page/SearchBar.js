@@ -30,7 +30,7 @@ const SearchBar = ({onSearch}) => { // 'onSearch' is a function that describes w
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col items-center w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center w-full mb-6">
             <div className="w-full max-w-lg px-2 bg-white rounded-full shadow-mg border border-blue-800">
                 <div className="flex items-center">
                     <input

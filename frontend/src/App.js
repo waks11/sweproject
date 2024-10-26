@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import SearchPage from './pages/SearchPage';
 import SignUp from './pages/SignUp';  
-import Login from './pages/Login';
-import axios from 'axios';
+import axios from "axios";
+import { useContext } from 'react';
+import { UserContext } from './pages/components/UserContext';
 
 function App() {
-  axios.defaults.baseURL = 'http://localhost:4000/';
+
+  const {user} = useContext(UserContext);
+
+  axios.defaults.baseURL = 'http://localhost:4000';
   axios.defaults.withCredentials = true;
 
   const [isLoggedIn, setIsLoggedIn] = useState(true); // set the initial state to false

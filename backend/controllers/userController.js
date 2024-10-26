@@ -27,12 +27,11 @@ const createUser = async (req, res) => {
 }
 
 
-
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -42,18 +41,57 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-
-        const token = jwt.sign(
-            { id: user._id, email: user.email }, 
+        jwt.sign(
+            { id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email }, 
             process.env.JWT_SECRET, 
-            { expiresIn: "1h" } 
-        );
+            { expiresIn: "1h" },
+            (error, token) => {
 
-  
-        res.status(200).json({ message: "Logged in", token, user });
+                if(error) {
+                    console.log("Error: ", error);
+                    return res.status(500).json({ error: "Error Generating Token" });
+                }
+
+                res.cookie('token', token, { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production' });
+
+                console.log("Cookie Set");
+
+                return res.status(200).json({ message: "Logged in", user : {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
+                }});
+
+            } 
+        );
+        
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-export { createUser, loginUser };
+const getUserProfile = (req, res) => {
+
+    const { token } = req.cookies;
+
+    if(!token) return res.json(null);
+
+    try {
+
+        jwt.verify(token, process.env.JWT_SECRET, {}, (error, user) => {
+            
+            if(error) {
+                console.log("Error: ", error);
+                return res.status(500).json({ error: "Error verifying token" });
+            }
+
+            res.json(user);
+        });
+
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+
+}
+
+export { createUser, loginUser, getUserProfile };

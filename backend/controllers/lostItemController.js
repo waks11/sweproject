@@ -79,7 +79,7 @@ const getSemanticSearch = async (req, res) => {
 
         for (const [doc, score] of top3Results) {
             if(score >= 0.70) {
-                console.log(doc);
+
                 items.push({
                     user_id: doc.metadata.user_id,
                     image_url: doc.metadata.image_url,

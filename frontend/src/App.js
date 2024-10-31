@@ -11,12 +11,15 @@ import { UserContext } from './pages/components/UserContext';
 
 function App() {
 
-  const {user} = useContext(UserContext);
+  const {user, loading} = useContext(UserContext);
 
   axios.defaults.baseURL = 'http://localhost:4000';
   axios.defaults.withCredentials = true;
 
-  console.log(user);
+  if(loading) {
+    return <div>Loading ...</div>;
+  }
+
 
   return (
     <div className="App">
@@ -32,8 +35,8 @@ function App() {
             ) : (
               <>
                 <Route path="/" element={<SearchPage />}/>
-                <Route path="/signup" element={<Navigate to="/signup" />} /> 
-                <Route path="/login" element={<Navigate to="/login" />} />
+                <Route path="/signup" element={<Navigate to="/" />} /> 
+                <Route path="/login" element={<Navigate to="/" />} />
               </>
             )}
           </Routes>

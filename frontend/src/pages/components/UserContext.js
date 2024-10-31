@@ -6,6 +6,7 @@ export const UserContext = createContext({});
 export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -16,7 +17,10 @@ export const UserProvider = ({ children }) => {
 
                 setUser(data);
             } catch (error) {
+                setUser(null);
                 console.error("Error Fetching User Profile: ", error);
+            } finally {
+                setLoading(false);
             }
 
         };
@@ -28,7 +32,7 @@ export const UserProvider = ({ children }) => {
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, loading }}>
             {children}
         </UserContext.Provider>
     );

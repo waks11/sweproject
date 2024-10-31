@@ -44,7 +44,9 @@ const createPost = async (req, res) => {
 
         // const embeddedItem = await EmbeddedItem.create({ text: completeDescription, embedding: embeddings, metadata: [{ source: queryItem.id }]});
 
-        res.status(200).json({item});
+        const returnItem = {user_id: item.user_id, image_url: item.image_url, description: item.description, location: item.location};
+
+        res.status(200).json({returnItem});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -77,12 +79,13 @@ const getSemanticSearch = async (req, res) => {
 
         for (const [doc, score] of top3Results) {
             if(score >= 0.70) {
+
                 items.push({
                     user_id: doc.metadata.user_id,
                     image_url: doc.metadata.image_url,
                     description: doc.pageContent,
                     score: score,
-                    location: doc?.location,
+                    location: doc.metadata?.location,
                 });
             }
         }
@@ -124,7 +127,7 @@ const getPaginatedItems = async (req, res) => {
         // page - 1 because we want to start from where previous page stopped
         const start = (page - 1) * limit;
 
-        const items = await LostItem.find().skip(start).limit(limit);
+        const items = await LostItem.find().sort({ _id: -1 }).skip(start).limit(limit);
 
         const hasMore = (page * limit < totalDocuments);
 

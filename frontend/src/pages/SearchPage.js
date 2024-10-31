@@ -34,7 +34,7 @@
 
                 const { response } = await axios.get(`/api/lostItems/getPage?page=${page + 1}&limit=24`);
 
-                setItemsDisplayed(previousItems => [...previousItems, ...response.items]);
+                setItemsDisplayed(previousItems => [ ...previousItems, ...response.items]);
 
                 setPage(previousPage => previousPage + 1);
 
@@ -60,7 +60,7 @@
             try {
 
                 const response = await axios.get(`/api/lostItems/search/semantic?user_search=${description}`);
-
+                
                 setItemsDisplayed(response.data.items);
 
                 setHasMore(false);
@@ -86,16 +86,17 @@
             try {
 
                 const { item } = await axios.post("/api/lostItems/upload", post_data, { headers: { 'Content': 'multipart/form-data' }});
+                
                 const imageUrl = item.image_url;
-
+                
                 setItemsDisplayed(previousItems => [
-                    ...previousItems,
                     {
                         user_id: userID,
                         image_url: imageUrl,
                         description: description,
                         location: location
-                    }
+                    },
+                    ...previousItems
                 ]);
 
             } catch(error) {

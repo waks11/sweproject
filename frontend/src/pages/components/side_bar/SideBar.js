@@ -9,9 +9,17 @@ import logoutImage from './icons/logout.webp'
 import axios from "axios";
 
 const Logo = () => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/')
+    };
+
     return (
         <div>
-            <img src={logoImage} alt="Logo"/>
+            <button onClick={ handleClick }>
+                <img src={logoImage} alt="Logo"/>
+            </button>
         </div>
     );
 };
@@ -41,7 +49,7 @@ const Account = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/login')
+        navigate('/account')
     };
 
     return (

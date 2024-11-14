@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import SearchPage from './pages/SearchPage';
 import SignUp from './pages/SignUp';  
-import Login from './pages/Login'
+import Login from './pages/Login';
+import AccountPage from './pages/AccountPage';
 import axios from "axios";
 import { useContext } from 'react';
 import { UserContext } from './pages/components/UserContext';
@@ -26,12 +27,14 @@ function App() {
             {!user ? (
               <>
                 <Route path="/signup" element={<SignUp />} /> 
+                <Route path="/account" element={<AccountPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Navigate to="/login" />}/>
               </>
             ) : (
               <>
                 <Route path="/" element={<SearchPage />}/>
+                <Route path="/account" element={<AccountPage />} />
                 <Route path="/signup" element={<Navigate to="/signup" />} /> 
                 <Route path="/login" element={<Navigate to="/login" />} />
               </>

@@ -17,6 +17,9 @@ const userSchema = Schema({
         },
     },
     password: { type: String, required: true } ,
+    admin: { type: Boolean, default: false },
+    goodStanding: { type: Boolean, default: true },
+    score: { type: Number, default: 0 },
 });
 
 export const User = mongoose.model('Users', userSchema, 'Users');

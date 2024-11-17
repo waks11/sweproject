@@ -6,6 +6,7 @@ import SearchPage from './pages/SearchPage';
 import SignUp from './pages/SignUp';  
 import Login from './pages/Login';
 import AccountPage from './pages/AccountPage';
+import ChatPage from './pages/ChatPage';
 import axios from "axios";
 import { useContext } from 'react';
 import { UserContext } from './pages/components/UserContext';
@@ -28,6 +29,7 @@ function App() {
               <>
                 <Route path="/signup" element={<SignUp />} /> 
                 <Route path="/account" element={<AccountPage />} />
+                <Route path="/messages" element={<ChatPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Navigate to="/login" />}/>
               </>
@@ -35,6 +37,7 @@ function App() {
               <>
                 <Route path="/" element={<SearchPage />}/>
                 <Route path="/account" element={<AccountPage />} />
+                <Route path="/messages" element={<ChatPage />} />
                 <Route path="/signup" element={<Navigate to="/signup" />} /> 
                 <Route path="/login" element={<Navigate to="/login" />} />
               </>

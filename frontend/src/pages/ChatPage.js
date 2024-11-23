@@ -10,7 +10,6 @@ const messages = [
     { content: "bye", senderId: 1 },
     { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0},
     { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0},
-    { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0}
 ];
 
 export const ChatPage = () => {
@@ -39,10 +38,13 @@ export const ChatPage = () => {
         <div className="flex h-screen">
             <SideBar />
             <ChatSideBar conversations={conversations}/>
-
-            <div className="ml-16 w-full overflow-hidden p-6">
-                <MessageDisplay messages={messages} />
-                <MessageBar onSend={() => {console.log('hi')}}/>
+            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
+                <div className="flex-grow">
+                    <MessageDisplay messages={messages} />
+                </div>
+                <div className="flex-shrink-0">
+                    <MessageBar onSend={() => {console.log('hi')}}/>
+                </div>
             </div>
         </div>
     );

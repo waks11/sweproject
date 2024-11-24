@@ -78,9 +78,14 @@ export const ChatPage = () => {
     return(
         <div className="flex h-screen">
             <SideBar />
-            <div className="ml-16 w-full overflow-hidden p-6">
-                <MessageDisplay messages={messages} />
-                <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+            <ChatSideBar conversations={conversations}/>
+            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
+                <div className="flex-grow">
+                    <MessageDisplay messages={messages} />
+                </div>
+                <div className="flex-shrink-0">
+                    <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+                </div>
             </div>
         </div>
     );

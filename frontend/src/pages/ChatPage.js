@@ -2,23 +2,85 @@ import axios from "axios";
 import SideBar from "./components/side_bar/SideBar";
 import MessageDisplay from "./components/chat_page/MessageDisplay";
 import MessageBar from "./components/chat_page/MessageBar";
-import { useState, useEffect } from "react";
-
-const messages = [
-    { content: "hi", senderId: 0 },
-    { content: "bye", senderId: 1 },
-    { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0},
-    { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0},
-    { content: "testing a longer message to see if it wraps or not ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", senderId: 0}
-];
+import getSocket from "../utils/socket";
+import { useState, useEffect, useContext, useRef } from "react";
+import { UserContext } from "./components/UserContext";
 
 export const ChatPage = () => {
+
+    const { user } = useContext(UserContext);
+    const [messages, setMessages] = useState([]);
+    const [currentConversation, setCurrentConversation] = useState({
+        conversationId: null,
+        receiverId: null
+    });
+
+    const socketRef = useRef(null);
+
+    useEffect(() => {
+        const socket = getSocket();
+        socket.connect();
+        socketRef.current = socket;
+
+        socket.on('receiveMessage', (newMessage) => {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+
+        return () => {
+            socket.off('receiveMessage');
+            socket.off('typing');
+            socket.off('messageRead');
+            socket.off('unreadMessages');
+
+            socket.disconnect();
+        };
+
+    }, []);
+
+    const handleOnSend = async ({ conversationId, receiverId, content }) => {
+
+        const newMessage = {
+            conversationId: conversationId,
+            senderId: user.id,
+            receiverId: receiverId,
+            content: content
+        };
+
+        const post_data = new FormData();
+        post_data.append("conversationId", conversationId);
+        post_data.append("senderId", user.id);
+        post_data.append("receiverId", receiverId);
+        post_data.append("content", content);
+
+        try {
+
+            await axios.post("/api/messages/sendMessage", post_data, { headers: { 'Content': 'multipart/form-data' }});
+
+            if (socketRef.current) {
+                socketRef.current.emit('sendMessage', newMessage);
+            }
+            
+            setMessages(previousMessages => [...previousMessages, newMessage]);
+
+        } catch (error) {
+            console.error("Error Sending Message", error);
+        }
+
+    };
+
+    const handleSelectConversation = (conversation) => {
+        setCurrentConversation({
+            conversationId: conversation.id,
+            receiverId: conversation.receiverId
+        });
+    };
+
     return(
         <div className="flex h-screen">
             <SideBar />
             <div className="ml-16 w-full overflow-hidden p-6">
                 <MessageDisplay messages={messages} />
-                <MessageBar onSend={() => {console.log('hi')}}/>
+                <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
             </div>
         </div>
     );

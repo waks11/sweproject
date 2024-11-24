@@ -39,7 +39,7 @@ const createPost = async (req, res) => {
         const {embeddings} = await getEmbeddings(description);
 
         const item = await LostItem.create({ user_id, image_url, description, location, embedding: embeddings });
-        
+         
         // const queryItem = await LostItem.findOne({ user_id: user_id });
 
         // const embeddedItem = await EmbeddedItem.create({ text: completeDescription, embedding: embeddings, metadata: [{ source: queryItem.id }]});

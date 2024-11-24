@@ -1,4 +1,4 @@
-import { Conversation } from "../models/conversations";
+import { Conversation } from "../models/conversations.js";
 
 const getConversations = async(req, res) => {
 
@@ -37,11 +37,53 @@ const getConversationById = async (req, res) => {
 
 };
 
+const getConversationByUsers = async (req, res) => {
+
+    try {
+
+        const { senderId, receiverId } = req.params;
+
+        const conversation = await Conversation.find({
+            users: { $all: [senderId, receiverId] }
+        });
+
+        if(!conversation) {
+            return res.status(404).json({ message: "Conversation Does Not Exist" });
+        }
+
+        res.status(200).json(conversation);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to Get Conversation By Users" });
+    }
+
+}
+
+const checkIfConversationExists = async (req, res) => {
+
+    try {
+
+        const { senderId, receiverId } = req.params;
+
+        const conversation = await Conversation.find({ users: { $all: [senderId, receiverId] }, });
+
+        if(!conversation) {
+            return res.status(200).json(false);
+        }
+        else {
+            return res.status(200).json(true);
+        }
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to Check if Conversation Existed", error });
+    }
+
+}
+
 const createConversation = async (req, res) => {
 
     try {
-        const { users } = req.body;
-        const newConversation = await Conversation.create({ users });
+        const { senderId, receiverId } = req.body;
+        const newConversation = await Conversation.create({ users: [senderId, receiverId] });
 
         res.status(200).json(newConversation);
     } catch (error) {
@@ -50,4 +92,4 @@ const createConversation = async (req, res) => {
 
 };
 
-export { getConversations, getConversationById, createConversation };
+export { getConversations, getConversationById, createConversation, checkIfConversationExists, getConversationByUsers };

@@ -1,5 +1,5 @@
-import { Message } from "../models/messages";
-import { Conversation } from "../models/conversations";
+import { Message } from "../models/messages.js";
+import { Conversation } from "../models/conversations.js";
 
 const getMessages = async (req, res) => {
 

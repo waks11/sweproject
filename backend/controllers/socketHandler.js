@@ -1,5 +1,5 @@
-import { Message } from "../models/messages";
-import { Conversation } from "../models/conversations";
+import { Message } from "../models/messages.js";
+import { Conversation } from "../models/conversations.js";
 
 const socketHandlers = (io, socket) => {
 
@@ -63,4 +63,4 @@ const socketHandlers = (io, socket) => {
 
 };
 
-export { socketHandlers };
+export default socketHandlers;

@@ -64,6 +64,7 @@ const loginUser = async (req, res) => {
                 console.log("Cookie Set");
 
                 return res.status(200).json({ message: "Logged in", user : {
+                    id: user._id,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email

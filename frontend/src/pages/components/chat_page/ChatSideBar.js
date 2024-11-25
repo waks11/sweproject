@@ -22,7 +22,7 @@ export const ChatSideBar = ({ selectConversation }) => {
     }, []);
 
     return (
-        <div className="fixed top-0 left-20 items-center h-screen w-100 bg-blue-800 text-white">
+        <div className="fixed top-0 left-20 items-center h-screen w-[12rem] bg-blue-800 text-white">
             <div className="p-4 text-xl font-bold border-b border-gray-700">
                 Chats
             </div>
@@ -39,7 +39,9 @@ export const ChatSideBar = ({ selectConversation }) => {
                         }}
                     >
                         <p className="font-semibold">
-                            {conversation.users.map((user) => `${user.firstName} ${user.lastName}`).join(", ")}
+                            {conversation.users.filter((curUser) => curUser._id !== user.id)
+                                                .map((curUser) => `${curUser.firstName} ${curUser.lastName}`)
+                                                .join(", ")}
                         </p>
                         <p className="text-sm text-gray-400">
                             {conversation.lastMessage?.content || "No response..."}

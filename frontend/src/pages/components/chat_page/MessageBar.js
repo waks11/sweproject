@@ -1,7 +1,7 @@
 import { useState } from "react";
 import sendMessageImage from "./icons/send_message.webp";
 
-const MessageBar = ({onSend}) => {
+const MessageBar = ({onSend, currentConversation}) => {
     const [message, setMessage] = useState("");
 
     const handleSetMessage = (e) => {
@@ -10,9 +10,22 @@ const MessageBar = ({onSend}) => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-        onSend({message});
+
+        const { conversationId, receiverId } = currentConversation;
+
+        if (!conversationId || !receiverId) {
+            console.error("Conversation or reciever not set");
+            return;
+        }
+
+        onSend({
+            conversationId,
+            receiverId,
+            content: message
+        });
+
         setMessage("");
-    }
+    };
 
     return(
         <div className="w-full px-2 bg-white rounded-full shadow-mg border border-blue-800">

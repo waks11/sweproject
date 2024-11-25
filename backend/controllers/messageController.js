@@ -2,13 +2,13 @@ import { Message } from "../models/messages.js";
 import { Conversation } from "../models/conversations.js";
 
 const getMessages = async (req, res) => {
-
+    
     try {
+        const { conversationId } = req.query;
+        // console.log("ConversationId,", conversationId);
+        const curMessages = await Message.find({conversationId: conversationId}).sort('timeStamp');
 
-        const { conversationId } = req.params;
-        const messages = await Message.find(conversationId).sort('timestamp');
-
-        res.status(200).json(messages);
+        res.status(200).json({curMessages});
     } catch (error) {
         res.status(500).json({ messages: "Error Getting Messages", error });
     }

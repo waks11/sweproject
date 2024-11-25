@@ -3,6 +3,7 @@ import SideBar from "./components/side_bar/SideBar";
 import MessageDisplay from "./components/chat_page/MessageDisplay";
 import MessageBar from "./components/chat_page/MessageBar";
 import getSocket from "../utils/socket";
+import ChatSideBar from "./components/chat_page/ChatSideBar";
 import { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./components/UserContext";
 
@@ -16,6 +17,16 @@ export const ChatPage = () => {
     });
 
     const socketRef = useRef(null);
+
+    const fetchAllMessages = async () => {
+
+        const response = await axios.get(`/api/messages/getMessages?conversationId=${currentConversation.conversationId}`);
+
+        const { curMessages } = response.data;
+
+        setMessages(curMessages);
+
+    }   
 
     useEffect(() => {
         const socket = getSocket();
@@ -37,6 +48,14 @@ export const ChatPage = () => {
 
     }, []);
 
+    useEffect(() => {
+
+        if(currentConversation.conversationId !== null) {
+            fetchAllMessages();
+        }
+
+    }, [currentConversation])
+
     const handleOnSend = async ({ conversationId, receiverId, content }) => {
 
         const newMessage = {
@@ -46,15 +65,15 @@ export const ChatPage = () => {
             content: content
         };
 
-        const post_data = new FormData();
-        post_data.append("conversationId", conversationId);
-        post_data.append("senderId", user.id);
-        post_data.append("receiverId", receiverId);
-        post_data.append("content", content);
+        // const post_data = new FormData();
+        // post_data.append("conversationId", conversationId);
+        // post_data.append("senderId", user.id);
+        // post_data.append("receiverId", receiverId);
+        // post_data.append("content", content);
 
         try {
 
-            await axios.post("/api/messages/sendMessage", post_data, { headers: { 'Content': 'multipart/form-data' }});
+            await axios.post("/api/messages/sendMessage", newMessage, { headers: { 'Content': 'application/json' }});
 
             if (socketRef.current) {
                 socketRef.current.emit('sendMessage', newMessage);
@@ -70,15 +89,15 @@ export const ChatPage = () => {
 
     const handleSelectConversation = (conversation) => {
         setCurrentConversation({
-            conversationId: conversation.id,
-            receiverId: conversation.receiverId
+            conversationId: conversation._id,
+            receiverId: (user.id === conversation.users[0]._id) ? conversation.users[1]._id : conversation.users[0]._id
         });
     };
 
     return(
         <div className="flex h-screen">
             <SideBar />
-            <ChatSideBar conversations={conversations}/>
+            <ChatSideBar selectConversation={handleSelectConversation}/>
             <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
                 <div className="flex-grow">
                     <MessageDisplay messages={messages} />

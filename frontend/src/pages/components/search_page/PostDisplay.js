@@ -1,13 +1,36 @@
+import axios from 'axios';
 import chatImage from './icons/add_chat.webp';
 import {useNavigate} from 'react-router-dom';
+import { UserContext } from '../UserContext';
+import { useContext } from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the returned list of items that satisfy the query from the database   
     const navigate = useNavigate();
+    const { user } = useContext(UserContext);
 
-    const handleClick = () => {
-        // this should navigate to the messages page while opening a new message depending on the post
-        // for now i'm gonna make it a filler to just bring you to the messages page
+    const handleClick = async (item) => {
+        // If it is their own item, they are not allowed to start a conversation with themselves
+        if(user.id === item.user_id) {
+            console.error("Cannot Reply to Your Own Item");
+            return;
+        }
+
+        // Check if Conversation Between Them Already Exists
+        const response = axios.get(`/api/conversations/getConversationExists?senderId=${user.id}&receiverId=${item.user_id}`)
+
+        if (response === true) {
+            navigate('/messages');
+            return;
+        }
+
+        // Create Convseration By Calling Backend Function
+        const post_data = {
+            senderId: user.id,
+            receiverId: item.user_id
+        };
+
+        await axios.post("/api/conversations/createChannel", post_data, { headers: { 'Content': 'application/json' }});
 
         navigate('/messages');
     };
@@ -27,6 +50,11 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
         );
     }
 
+    const handleTest = (e) => {
+        e.preventDefault();
+
+        console.log("yo");
+    }
     
     return (
         <InfiniteScroll
@@ -54,7 +82,7 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
                                     {"@" + item.location}
                                 </span>
                             </p>
-                            <button onClick={handleClick}>
+                            <button onClick={() => handleClick(item)}>
                                 <img
                                     src={chatImage}
                                     alt="Add chat image"

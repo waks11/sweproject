@@ -42,17 +42,6 @@ const SearchBar = ({onSearch}) => { // 'onSearch' is a function that describes w
                     />
                     <div className="ml-auto flex space-x-2">
                         <button
-                            type="button"
-                            onClick={toggleAdvancedDisplay}
-                            className="flex flex-center justify-center"
-                        >
-                            <img 
-                                src={plusImage} 
-                                alt="Plus sign" 
-                                className="object-contain w-11 h-11"
-                            />
-                        </button>
-                        <button
                             type="submit"
                         >
                             <img 

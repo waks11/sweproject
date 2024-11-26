@@ -18,6 +18,8 @@ const MakePost = ({onPost}) => {
 
         // setUserID() - need to set userID with the logged user
 
+        console.log("USER:", user);
+
         if(onPost) {
             await onPost({userID: user.id, image, description, location});
         }

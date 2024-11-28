@@ -62,11 +62,12 @@ const loginUser = async (req, res) => {
                 res.cookie('token', token, { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production' });
 
                 console.log("Cookie Set");
-
+               
                 return res.status(200).json({ message: "Logged in", user : {
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    email: user.email
+                    email: user.email,
+                    admin: user.admin
                 }});
 
             } 

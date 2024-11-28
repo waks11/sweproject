@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/userRouter.js";
 import itemRouter from "./routes/itemRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use('/api/users', userRouter);
 app.use('/api/lostItems', itemRouter);
+app.use('/api/admin', adminRouter);
 
 const connectionString = process.env.MONGO_URI;
 

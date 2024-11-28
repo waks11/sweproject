@@ -21,6 +21,8 @@ function App() {
     return <div>Loading ...</div>;
   }
 
+  // console.log(user.admin);
+
   return (
     <div className="App">
       <div className="pages">
@@ -33,8 +35,12 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/" element={<SearchPage />} />
-              {user.admin && <Route path="/admin" element={<AdminPage />} />}
+              {user.admin ? (
+                <Route path="/" element={<Navigate to="/admin" />} />
+              ) : (
+                <Route path="/" element={<SearchPage />} />
+              )}
+              <Route path="/admin" element={user.admin ? <AdminPage /> : <Navigate to="/" />} />
               <Route path="/signup" element={<Navigate to="/" />} />
               <Route path="/login" element={<Navigate to="/" />} />
             </>

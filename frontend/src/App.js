@@ -32,8 +32,8 @@ function App() {
           {!user ? (
             <>
               <Route path="/signup" element={<SignUp />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/messages" element={<ChatPage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="/messages" element={<ChatPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Navigate to="/login" />} />
             </>
@@ -45,8 +45,8 @@ function App() {
                 <Route path="/" element={<SearchPage />} />
               )}
               <Route path="/admin" element={user.admin ? <AdminPage /> : <Navigate to="/" />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/messages" element={<ChatPage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="/messages" element={<ChatPage />} />
               <Route path="/signup" element={<Navigate to="/signup" />} />
               <Route path="/login" element={<Navigate to="/login" />} />
             </>

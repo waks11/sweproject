@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SideBar from "./components/side_bar/SideBar";
 import axios from "axios";
 
 const AdminPage = () => {
@@ -44,34 +45,37 @@ const AdminPage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="admin-page">
-      <h1>Admin Dashboard</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Good Standing</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td>{user.firstName} {user.lastName}</td>
-              <td>{user.email}</td>
-              <td>{user.goodStanding ? "Yes" : "No"}</td>
-              <td>
-                <button
-                  onClick={() => toggleGoodStanding(user._id, user.goodStanding)}
-                >
-                  {user.goodStanding ? "Set to Bad" : "Set to Good"}
-                </button>
-              </td>
+    <div className="flex">
+      <SideBar />
+      <div className="ml-16 p-6 w-full"> 
+        <h1>Admin Dashboard</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Good Standing</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.firstName} {user.lastName}</td>
+                <td>{user.email}</td>
+                <td>{user.goodStanding ? "Yes" : "No"}</td>
+                <td>
+                  <button
+                    onClick={() => toggleGoodStanding(user._id, user.goodStanding)}
+                  >
+                    {user.goodStanding ? "Set to Bad" : "Set to Good"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div> 
     </div>
   );
 };

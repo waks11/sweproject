@@ -64,6 +64,7 @@ const loginUser = async (req, res) => {
                 console.log("Cookie Set");
                
                 return res.status(200).json({ message: "Logged in", user : {
+                    id: user._id,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
@@ -102,6 +103,21 @@ const getUserProfile = (req, res) => {
 
 }
 
+const getUserById = async (req, res) => {
+
+    try {
+        const { user_id } = req.query;
+
+        const user = await User.findById(user_id);
+
+        res.status(200).json(user);
+
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+
+}
+
 const signOutUser = async (req, res) => {
 
     try {
@@ -117,4 +133,4 @@ const signOutUser = async (req, res) => {
 
 }
 
-export { createUser, loginUser, getUserProfile, signOutUser };
+export { createUser, loginUser, getUserProfile, getUserById, signOutUser };

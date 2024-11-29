@@ -2,6 +2,7 @@ import axios from "axios";
 import SideBar from "./components/side_bar/SideBar";
 import MessageDisplay from "./components/chat_page/MessageDisplay";
 import MessageBar from "./components/chat_page/MessageBar";
+import ActionBar from "./components/chat_page/ActionBar";
 import getSocket from "../utils/socket";
 import ChatSideBar from "./components/chat_page/ChatSideBar";
 import { useState, useEffect, useContext, useRef } from "react";
@@ -15,6 +16,8 @@ export const ChatPage = () => {
         conversationId: null,
         receiverId: null
     });
+    const [displayRatingPopup, setDisplayRatingPopup] = useState(false);
+    const [isItemPoster, setIsItemPoster] = useState(false);
 
     const socketRef = useRef(null);
 
@@ -92,16 +95,32 @@ export const ChatPage = () => {
             conversationId: conversation._id,
             receiverId: (user.id === conversation.users[0]._id) ? conversation.users[1]._id : conversation.users[0]._id
         });
+
+        setIsItemPoster(user.id === conversation.users[1]._id);
     };
+
+    const handleFlagUser = () => {
+        /* flag the user in the conversation that isn't the current user */
+    }
+
+    const handleArchiveChat = () => {
+        /* set the conversation to archived */
+
+        /* do not remove the code below that displays the popup for rating the user */
+        setDisplayRatingPopup(true);
+    }
 
     return(
         <div className="flex h-screen">
             <SideBar />
             <ChatSideBar selectConversation={handleSelectConversation}/>
-            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
+            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col relative">
                 {currentConversation.conversationId ? (
                     <>
-                        <div className="flex-grow">
+                        <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
+                            <ActionBar flagUser={handleFlagUser} archiveChat={handleArchiveChat} isItemPoster={isItemPoster}/>
+                        </div>
+                        <div className="flex-grow mt-16">
                             <MessageDisplay messages={messages} />
                         </div>
                         <div className="flex-shrink-0">

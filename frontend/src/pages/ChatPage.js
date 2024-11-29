@@ -99,12 +99,23 @@ export const ChatPage = () => {
             <SideBar />
             <ChatSideBar selectConversation={handleSelectConversation}/>
             <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
-                <div className="flex-grow">
-                    <MessageDisplay messages={messages} />
-                </div>
-                <div className="flex-shrink-0">
-                    <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
-                </div>
+                {currentConversation.conversationId ? (
+                    <>
+                        <div className="flex-grow">
+                            <MessageDisplay messages={messages} />
+                        </div>
+                        <div className="flex-shrink-0">
+                            <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                            <h1 className="text-4xl font-bold text-center text-gray-800">Chat Page</h1>
+                            <p className="text-gray-600 font-medium text-center">Click on a chat to send a message.</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

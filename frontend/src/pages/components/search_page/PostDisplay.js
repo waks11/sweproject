@@ -28,7 +28,8 @@ const PostDisplay = ({ items, loadMore, hasMore }) => {
         // Create Convseration By Calling Backend Function
         const post_data = {
             senderId: user.id,
-            receiverId: item.user_id
+            receiverId: item.user_id,
+            item_id: item._id
         };
 
         await axios.post("/api/conversations/createChannel", post_data, { headers: { 'Content': 'application/json' }});

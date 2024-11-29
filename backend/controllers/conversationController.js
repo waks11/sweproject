@@ -88,14 +88,14 @@ const checkIfConversationExists = async (req, res) => {
 const createConversation = async (req, res) => {
 
     try {
-        const { senderId, receiverId } = req.body;
+        const { senderId, receiverId, item_id } = req.body;
 
-        console.log(senderId + " " + receiverId);
         const newConversation = await Conversation.create({ 
             users: [
                 senderId,
                 receiverId
-            ] 
+            ],
+            lostItem: item_id
         });
         console.log("Made it here");
         res.status(200).json(newConversation);

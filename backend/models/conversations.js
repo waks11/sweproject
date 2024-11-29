@@ -17,6 +17,10 @@ const conversationSchema = Schema({
         type: Date,
         default: Date.now
     },
+    lostItem: {
+        type: Schema.Types.ObjectId,
+        ref: 'LostItems'
+    },
     isArchived: {
         type: Boolean,
         default: false

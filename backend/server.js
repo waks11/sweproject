@@ -12,6 +12,7 @@ import conversationRouter from "./routes/conversationRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import adminRouter from "./routes/adminRouter.js";
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use('/api/users', userRouter);
 app.use('/api/lostItems', itemRouter);
 app.use('/api/conversations', conversationRouter);
 app.use('/api/messages', messageRouter);
+app.use('/api/admin', adminRouter);
 
 const connectionString = process.env.MONGO_URI;
 

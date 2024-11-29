@@ -20,6 +20,7 @@ const userSchema = Schema({
     admin: { type: Boolean, default: false },
     goodStanding: { type: Boolean, default: true },
     score: { type: Number, default: 0 },
+    numOfRatings: { type: Number, default: 0 }
 });
 
 export const User = mongoose.model('Users', userSchema, 'Users');

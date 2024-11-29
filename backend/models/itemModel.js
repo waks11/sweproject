@@ -24,6 +24,10 @@ const itemSchema = Schema({
         type: [Number], 
         required: true, 
         index: 'vector_index'
+    },
+    isArchived: {
+        type: Boolean,
+        default: false
     }
 });
 

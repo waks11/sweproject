@@ -1,11 +1,12 @@
 import axios from 'axios';
 import chatImage from './icons/add_chat.webp';
+import deleteIcon from './icons/remove.png';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { useContext } from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the returned list of items that satisfy the query from the database   
+const PostDisplay = ({ items, loadMore, hasMore }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
@@ -49,13 +50,23 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
             </div>
         );
     }
-
-    const handleTest = (e) => {
-        e.preventDefault();
-
-        console.log("yo");
-    }
     
+    const handleDelete = async (postId) => {
+        try {
+            const response = await axios.delete(`/api/lostItems/delete/${postId}?user_id=${user.id}`, {
+                headers: { 'Content-Type': 'application/json' },
+            });            
+    
+            if (response.status === 200) {
+                alert("Post deleted successfully");
+                window.location.reload(); // Reload or refresh items
+            }
+        } catch (error) {
+            console.error("Error deleting post:", error.response?.data || error.message);
+        }
+    };
+    
+
     return (
         <InfiniteScroll
             dataLength={items.length}
@@ -65,12 +76,23 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
             <div className="grid grid-cols-2 sm:grid-cols-3 ">
                 {items.map((item, index) => (
                     <div key={index} className="flex flex-col items-center mb-1">
-                        <div className="w-[45vh] h-[45vh] flex items-center justify-center">
+                        <div className="relative w-[45vh] h-[45vh] flex items-center justify-center">
                             <img
                                 src={item.image_url}
                                 alt={'${index}'}
                                 className="w-full h-full object-cover"
                             />
+                            {user.id === item.user_id && (
+                                <button
+                                    onClick={() => handleDelete(item._id)}
+                                >
+                                    <img 
+                                        src={deleteIcon}
+                                        alt="Delete Icon"
+                                        className="absolute top-2 right-2 w-8 h-9"
+                                    />
+                                </button>
+                            )}
                         </div>
                         <div className="flex justify-between items-center w-[90%] border border-blue-800 px-4 py-2 space-x-2 rounded-md">
                             <p 
@@ -83,19 +105,19 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
                                 </span>
                             </p>
                             <button onClick={() => handleClick(item)}>
-                                <img
+                                <img 
                                     src={chatImage}
                                     alt="Add chat image"
                                     className="w-8 h-9 object-contain"
                                 />
                             </button>
+                            
                         </div>
                     </div>
                 ))}
             </div>
         </InfiniteScroll>
     );
-    
 };
 
 export default PostDisplay;

@@ -49,12 +49,6 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
             </div>
         );
     }
-
-    const handleTest = (e) => {
-        e.preventDefault();
-
-        console.log("yo");
-    }
     
     return (
         <InfiniteScroll

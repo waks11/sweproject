@@ -82,8 +82,6 @@
             post_data.append("lostImage", image);
             post_data.append("description", description);
             post_data.append("location", location);
-            
-            console.log(userID);
 
             try {
 

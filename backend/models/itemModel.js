@@ -27,7 +27,6 @@ const itemSchema = Schema({
     },
     isArchived: {
         type: Boolean,
-        required: true,
         default: false
     }
 });

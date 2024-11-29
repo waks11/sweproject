@@ -6,7 +6,7 @@ const adminRouter = express.Router();
 
 adminRouter.get('/dashboard', verifyAdmin, async (req, res) => {
     try {
-        const users = await User.find(); 
+        const users = await User.find({ $or: [{ admin: false }, { admin: { $exists: false }}]}); 
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ error: "Server error" });

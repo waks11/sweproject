@@ -2,12 +2,15 @@ import axios from "axios";
 import SideBar from "./components/side_bar/SideBar";
 import MessageDisplay from "./components/chat_page/MessageDisplay";
 import MessageBar from "./components/chat_page/MessageBar";
+import ActionBar from "./components/chat_page/ActionBar";
+import RateUser from "./components/rate_user/RateUser";
+import ReportUser from "./components/chat_page/ReportUser";
 import getSocket from "../utils/socket";
 import ChatSideBar from "./components/chat_page/ChatSideBar";
 import { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "./components/UserContext";
 
-export const ChatPage = () => {
+const ChatPage = () => {
 
     const { user } = useContext(UserContext);
     const [messages, setMessages] = useState([]);
@@ -15,6 +18,9 @@ export const ChatPage = () => {
         conversationId: null,
         receiverId: null
     });
+    const [displayRatingPopup, setDisplayRatingPopup] = useState(false);
+    const [reportUserPopup, setReportUserPopup] = useState(false);
+    const [isItemPoster, setIsItemPoster] = useState(false);
 
     const socketRef = useRef(null);
 
@@ -92,20 +98,59 @@ export const ChatPage = () => {
             conversationId: conversation._id,
             receiverId: (user.id === conversation.users[0]._id) ? conversation.users[1]._id : conversation.users[0]._id
         });
+
+        setIsItemPoster(user.id === conversation.users[1]._id);
     };
+
+    const handleFlagUser = () => {
+        /* flag the user in the conversation that isn't the current user */
+        /* should send over the conversation id and reported user id over to the ReportUser.js file */
+        /* handleSubmit in the ReportUser.js file should use those ids along with the description and connect to admin's backend */
+
+        console.log('handle flag working');
+    };
+
+    const handleArchiveChat = () => {
+        /* set chat to archived */
+        /* handleSubmit in RateUser.js file will also have the rating stored to be used */
+
+        console.log('handle archive working');
+    };
+
+
 
     return(
         <div className="flex h-screen">
             <SideBar />
             <ChatSideBar selectConversation={handleSelectConversation}/>
-            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col">
-                <div className="flex-grow">
-                    <MessageDisplay messages={messages} />
-                </div>
-                <div className="flex-shrink-0">
-                    <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
-                </div>
+            <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col relative">
+                {currentConversation.conversationId ? (
+                    <>
+                        <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
+                            <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
+                        </div>
+                        <div className="flex-grow mt-16">
+                            <MessageDisplay messages={messages} />
+                        </div>
+                        <div className="flex-shrink-0">
+                            <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                            <h1 className="text-4xl font-bold text-center text-gray-800">Chat Page</h1>
+                            <p className="text-gray-600 font-medium text-center">Click on a chat to send a message.</p>
+                        </div>
+                    </div>
+                )}
             </div>
+            {displayRatingPopup &&
+                <RateUser onSubmit={handleArchiveChat} setIsOpen={setDisplayRatingPopup} />
+            }
+            {reportUserPopup &&
+                <ReportUser onSubmit={handleFlagUser} setIsOpen={setReportUserPopup} />
+            }
         </div>
     );
 };

@@ -43,7 +43,7 @@ export const ChatSideBar = ({ selectConversation }) => {
                                                 .map((curUser) => `${curUser.firstName} ${curUser.lastName}`)
                                                 .join(", ")}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-400 line-clamp-2">
                             {conversation.lastMessage?.content || "No response..."}
                         </p>
                     </li>

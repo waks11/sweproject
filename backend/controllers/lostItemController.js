@@ -141,6 +141,32 @@ const getPaginatedItems = async (req, res) => {
 
 }
 
+const deletePost = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.query.user_id; // Get user ID from query parameters
 
-export { createPost, getSemanticSearch, getImageUrl, getPaginatedItems };
+    try {
+        const item = await LostItem.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+
+        if (item.user_id.toString() !== userId) {
+            return res.status(403).json({ error: "You are not authorized to delete this post" });
+        }
+
+        await LostItem.findByIdAndDelete(id);
+
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+
+
+export { createPost, getSemanticSearch, getImageUrl, getPaginatedItems, deletePost };
 

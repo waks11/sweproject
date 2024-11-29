@@ -5,7 +5,7 @@ import { UserContext } from '../UserContext';
 import { useContext } from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the returned list of items that satisfy the query from the database   
+const PostDisplay = ({ items, loadMore, hasMore }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
@@ -50,6 +50,22 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
         );
     }
     
+    const handleDelete = async (postId) => {
+        try {
+            const response = await axios.delete(`/api/lostItems/delete/${postId}?user_id=${user.id}`, {
+                headers: { 'Content-Type': 'application/json' },
+            });            
+    
+            if (response.status === 200) {
+                alert("Post deleted successfully");
+                window.location.reload(); // Reload or refresh items
+            }
+        } catch (error) {
+            console.error("Error deleting post:", error.response?.data || error.message);
+        }
+    };
+    
+
     return (
         <InfiniteScroll
             dataLength={items.length}
@@ -69,27 +85,27 @@ const PostDisplay = ({ items, loadMore, hasMore }) => { // 'items' will be the r
                         <div className="flex justify-between items-center w-[90%] border border-blue-800 px-4 py-2 space-x-2 rounded-md">
                             <p 
                                 className="text-lg max-w-[85%] truncate leading-snug"
-                                onClick={handleTruncate}
+                                onClick={(e) => e.currentTarget.classList.toggle('truncate')}
                             >
                                 {item.description}
                                 <span className="text-blue-500 block">
                                     {"@" + item.location}
                                 </span>
                             </p>
-                            <button onClick={() => handleClick(item)}>
-                                <img
-                                    src={chatImage}
-                                    alt="Add chat image"
-                                    className="w-8 h-9 object-contain"
-                                />
-                            </button>
+                            {user.id === item.user_id && (
+                                <button
+                                    onClick={() => handleDelete(item._id)}
+                                    className="text-red-600"
+                                >
+                                    Delete
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
         </InfiniteScroll>
     );
-    
 };
 
 export default PostDisplay;

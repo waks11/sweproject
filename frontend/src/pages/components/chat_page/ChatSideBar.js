@@ -26,7 +26,7 @@ export const ChatSideBar = ({ selectConversation }) => {
             <div className="p-4 text-xl font-bold border-b border-gray-700">
                 Chats
             </div>
-            <ul className="flex-1 overflow-y-auto">
+            <ul className="flex-1 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-none">
                 {conversations.map((conversation, index) => (   
                     <li
                         key={conversation._id}
@@ -49,6 +49,16 @@ export const ChatSideBar = ({ selectConversation }) => {
                     </li>
                 ))}
             </ul>
+
+            <style jsx>{`
+                ul::-webkit-scrollbar {
+                    display: none;
+                }
+                ul {
+                    scrollbar-width: none;  
+                    -ms-overflow-style: none;  
+                }
+            `}</style>
         </div>
     );
 }

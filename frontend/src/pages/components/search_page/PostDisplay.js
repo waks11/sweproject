@@ -1,5 +1,6 @@
 import axios from 'axios';
 import chatImage from './icons/add_chat.webp';
+import deleteIcon from './icons/remove.png';
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { useContext } from 'react';
@@ -75,31 +76,42 @@ const PostDisplay = ({ items, loadMore, hasMore }) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 ">
                 {items.map((item, index) => (
                     <div key={index} className="flex flex-col items-center mb-1">
-                        <div className="w-[45vh] h-[45vh] flex items-center justify-center">
+                        <div className="relative w-[45vh] h-[45vh] flex items-center justify-center">
                             <img
                                 src={item.image_url}
                                 alt={'${index}'}
                                 className="w-full h-full object-cover"
                             />
+                            {user.id === item.user_id && (
+                                <button
+                                    onClick={() => handleDelete(item._id)}
+                                >
+                                    <img 
+                                        src={deleteIcon}
+                                        alt="Delete Icon"
+                                        className="absolute top-2 right-2 w-8 h-9"
+                                    />
+                                </button>
+                            )}
                         </div>
                         <div className="flex justify-between items-center w-[90%] border border-blue-800 px-4 py-2 space-x-2 rounded-md">
                             <p 
                                 className="text-lg max-w-[85%] truncate leading-snug"
-                                onClick={(e) => e.currentTarget.classList.toggle('truncate')}
+                                onClick={handleTruncate}
                             >
                                 {item.description}
                                 <span className="text-blue-500 block">
                                     {"@" + item.location}
                                 </span>
                             </p>
-                            {user.id === item.user_id && (
-                                <button
-                                    onClick={() => handleDelete(item._id)}
-                                    className="text-red-600"
-                                >
-                                    Delete
-                                </button>
-                            )}
+                            <button onClick={() => handleClick(item)}>
+                                <img 
+                                    src={chatImage}
+                                    alt="Add chat image"
+                                    className="w-8 h-9 object-contain"
+                                />
+                            </button>
+                            
                         </div>
                     </div>
                 ))}

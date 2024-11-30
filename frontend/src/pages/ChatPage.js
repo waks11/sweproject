@@ -93,6 +93,8 @@ const ChatPage = () => {
 
     };
 
+
+
     const handleSelectConversation = (conversation) => {
         setCurrentConversation({
             conversationId: conversation._id,
@@ -129,7 +131,7 @@ const ChatPage = () => {
                         <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
                             <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
                         </div>
-                        <div className="flex-grow mt-16">
+                        <div className="scrollable flex-grow mt-16 overflow-y-auto">
                             <MessageDisplay messages={messages} />
                         </div>
                         <div className="flex-shrink-0">
@@ -151,6 +153,16 @@ const ChatPage = () => {
             {reportUserPopup &&
                 <ReportUser onSubmit={handleFlagUser} setIsOpen={setReportUserPopup} />
             }
+
+            <style jsx>{`
+                .scrollable::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollable {
+                    scrollbar-width: none;  
+                    -ms-overflow-style: none;  
+                }
+            `}</style>
         </div>
     );
 };

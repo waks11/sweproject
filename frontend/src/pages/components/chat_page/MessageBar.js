@@ -34,6 +34,11 @@ const MessageBar = ({onSend, currentConversation}) => {
                     type="text"
                     value={message}
                     onChange={handleSetMessage}
+                    onKeyDown={(e) => {
+                        if(e.key === 'Enter' && message !== "") {
+                            sendMessage(e);
+                        }
+                    }}
                     placeholder="Type message..."
                     className="w-full"
                 />

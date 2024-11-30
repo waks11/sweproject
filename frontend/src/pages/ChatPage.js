@@ -16,11 +16,14 @@ const ChatPage = () => {
     const [messages, setMessages] = useState([]);
     const [currentConversation, setCurrentConversation] = useState({
         conversationId: null,
-        receiverId: null
+        receiverId: null,
+        isArchived: null
     });
     const [displayRatingPopup, setDisplayRatingPopup] = useState(false);
     const [reportUserPopup, setReportUserPopup] = useState(false);
     const [isItemPoster, setIsItemPoster] = useState(false);
+
+    const scrollableRef = useRef(null);
 
     const socketRef = useRef(null);
 
@@ -93,12 +96,17 @@ const ChatPage = () => {
 
     };
 
-
+    useEffect(() => {
+        if(scrollableRef.current) {
+            scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     const handleSelectConversation = (conversation) => {
         setCurrentConversation({
             conversationId: conversation._id,
-            receiverId: (user.id === conversation.users[0]._id) ? conversation.users[1]._id : conversation.users[0]._id
+            receiverId: (user.id === conversation.users[0]._id) ? conversation.users[1]._id : conversation.users[0]._id,
+            isArchived: conversation.isArchived
         });
 
         setIsItemPoster(user.id === conversation.users[1]._id);
@@ -128,15 +136,26 @@ const ChatPage = () => {
             <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col relative">
                 {currentConversation.conversationId ? (
                     <>
-                        <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
-                            <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
-                        </div>
-                        <div className="scrollable flex-grow mt-16 overflow-y-auto">
+                        {!currentConversation.isArchived ? (
+                            <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
+                                <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
+                            </div>
+                        ) : (
+                            <div className="absolute top-0 left-4 w-[calc(100%-1rem)] bg-gray-100 p-6">
+                                This chat is archived.
+                            </div>
+                        )}
+                        <div 
+                            className="scrollable flex-grow mt-16 overflow-y-auto"
+                            ref={scrollableRef}
+                        >
                             <MessageDisplay messages={messages} />
                         </div>
-                        <div className="flex-shrink-0">
-                            <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
-                        </div>
+                        {!currentConversation.isArchived &&
+                            <div className="flex-shrink-0">
+                                <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+                            </div>
+                        }
                     </>
                 ) : (
                     <div className="flex items-center justify-center h-full">

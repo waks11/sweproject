@@ -30,9 +30,11 @@ export const ChatSideBar = ({ selectConversation }) => {
                 {conversations.map((conversation, index) => (   
                     <li
                         key={conversation._id}
-                        className={`p-3 cursor-pointer hover:bg-gray-700 ${
-                            activeChat === index ? "bg-gray-700" : ""
-                        }`}
+                        className={`p-3 cursor-pointer hover:bg-gray-700 
+                            ${activeChat === index ? "bg-gray-700" : (
+                                conversation.isArchived ? "bg-gray-900" : ""
+                            )}
+                        `}
                         onClick={() => {
                             setActiveChat(index);
                             selectConversation(conversation);

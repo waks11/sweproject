@@ -1,15 +1,33 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../UserContext';
+import axios from 'axios';
 
 const ReportUser = ({ onSubmit, setIsOpen }) => {
+    const { user } = useContext(UserContext);
     const [description, setDescription] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        /* utilize the reported user id and conversation id given from onSubmit along with description to send to admin backend */
+        if(user.admin) {
+            return;
+        }
 
-        onSubmit();
+        /* utilize the reported user id and conversation id given from onSubmit along with description to send to admin backend */
+        const {conversationId, reporterId, reportedUserId, isArchived} = onSubmit();
+
+        if(isArchived) {
+            return;
+        }
+
+        const newReportInformation = {
+            reporterId,
+            reportedUserId,
+            reportedConversationId: conversationId,
+            reportedDescription: description
+        };
+
+        await axios.post("/api/reports/createReport", newReportInformation, { headers: { 'Content': 'application/json' }});
 
         setIsOpen(false);
     };

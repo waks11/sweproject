@@ -10,6 +10,7 @@ import userRouter from "./routes/userRouter.js";
 import itemRouter from "./routes/itemRouter.js";
 import conversationRouter from "./routes/conversationRouter.js";
 import messageRouter from "./routes/messageRouter.js";
+import reportRouter from "./routes/reportRouter.js";
 
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import adminRouter from "./routes/adminRouter.js";
@@ -26,19 +27,6 @@ const corsOptions = {
     credentials: true,
 };
 
-// const embeddings = new HuggingFaceInferenceEmbeddings({
-//     apiKey: process.env.HUGGING_FACE_TOKEN,
-//     model: 'sentence-transformers/all-MiniLM-L6-v2'
-// });
-
-// console.log("Init embeddings model");
-// embeddings.embedDocuments(["init"]);
-
-// const attachEmbeddings = (req, res, next) => {
-//     req.embeddings = embeddings;
-//     next();
-// }
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -53,6 +41,7 @@ app.use('/api/lostItems', itemRouter);
 app.use('/api/conversations', conversationRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/reports', reportRouter);
 
 const connectionString = process.env.MONGO_URI;
 
@@ -60,9 +49,13 @@ mongoose.connect(connectionString).then(() => {
     
     console.log("Connected to DB");
 
-    app.listen(process.env.PORT, () => {
-        console.log("Listening on Port", process.env.PORT)
-    });
+    server.listen(process.env.PORT, () => {
+        console.log(`Server Running on Port ${process.env.PORT}`);
+    });    
+
+    // app.listen(process.env.PORT, () => {
+    //     console.log("Listening on Port", process.env.PORT)
+    // });
 
 }).catch((error) => {
     console.log(error);

@@ -29,7 +29,7 @@ export const UserProvider = ({ children }) => {
             fetchUserProfile();
         }
 
-    }, [user]);
+    }, []);
 
     return (
         <UserContext.Provider value={{ user, setUser, loading }}>

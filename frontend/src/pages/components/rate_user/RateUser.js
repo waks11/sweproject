@@ -1,15 +1,30 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../UserContext';
+import axios from 'axios';
 
 const RateUser = ({ onSubmit, setIsOpen }) => {
+    const { user } = useContext(UserContext);
     const [rating, setRating] = useState(0);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
+        if(user.admin) {
+            return;
+        }
         /* onSubmit should set the chat to archived, and utilizing rating, you should be able to update the users' ratings */   
 
-        onSubmit();
+        const { user_id } = await onSubmit();
+
+        if(user_id === null) {
+            return;
+        }
+
+        const post_data = {
+            user_id: user_id,
+            rating: rating
+        };
+        await axios.post("/api/users/updateRating", post_data, { headers: { 'Content': 'application/json' }});
 
         setIsOpen(false);
     };

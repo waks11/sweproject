@@ -1,9 +1,11 @@
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import { useLocation } from "react-router-dom";
 import React, { useState, useContext, useEffect } from "react";
 
-export const ChatSideBar = ({ selectConversation }) => {
+export const ChatSideBar = ({ selectConversation, specificConversationId = null }) => {
     const { user } = useContext(UserContext);
+    const location = useLocation();
     const [conversations, setConversations] = useState([]);
     const [activeChat, setActiveChat] = useState(null);
 
@@ -13,10 +15,31 @@ export const ChatSideBar = ({ selectConversation }) => {
         const { curConversations } = response.data;
         
         setConversations(curConversations);
+
+        if(specificConversationId && user?.admin === false) {
+           
+            const specificIndex = curConversations.findIndex((conversation) => conversation._id === specificConversationId);
+
+            if(specificIndex !== -1) {
+                setActiveChat(specificIndex);
+                setConversations(curConversations[specificIndex]);
+            }
+        }
+        else if(specificConversationId && user.admin === true) {
+
+            const response = await axios.get(`/api/conversations/getConversationById?id=${specificConversationId}`);
+            
+            const specificConversation = [response.data];
+
+            setConversations(specificConversation);
+            setActiveChat(0);
+            
+        }
     }
 
     useEffect(() => {
 
+        specificConversationId = location.state?.specificConversationId;
         fetchAllConversations();
 
     }, []);

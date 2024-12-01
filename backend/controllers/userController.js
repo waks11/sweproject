@@ -55,13 +55,10 @@ const loginUser = async (req, res) => {
             (error, token) => {
 
                 if(error) {
-                    console.log("Error: ", error);
                     return res.status(500).json({ error: "Error Generating Token" });
                 }
 
                 res.cookie('token', token, { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production' });
-
-                console.log("Cookie Set");
 
                 return res.status(200).json({ message: "Logged in", user : {
                     id: user._id,
@@ -134,4 +131,44 @@ const signOutUser = async (req, res) => {
 
 }
 
-export { createUser, loginUser, getUserProfile, getUserById, signOutUser };
+const updateUserRating = async (req, res) => {
+
+    const { user_id, rating } = req.body;
+    console.log(user_id);
+    try {
+
+        const user = await User.findOne({ _id: user_id });
+
+        const newNumOfRatings = user.numOfRatings + 1;
+        const newRating = (user.score + rating) / (newNumOfRatings);
+
+        const result = await User.updateOne(
+            { _id: user_id },
+            { $set: { score: newRating, numOfRatings: newNumOfRatings }},
+        );
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to update user rating", error });
+    }
+
+}
+
+const updateNewField = async (req, res) => {
+
+    try {
+
+        const result = await User.updateMany(
+            {},
+            { $set: { numOfRatings: 0, score: 0, goodStanding: true, admin: false }}
+        );
+
+        res.status(200).json(result);
+    } catch(error) {
+        res.status(500).json("Error updating fields in User schema", error);
+    }
+
+}
+
+export { createUser, loginUser, getUserProfile, getUserById, signOutUser, updateUserRating, updateNewField };

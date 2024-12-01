@@ -30,7 +30,10 @@ const getConversationById = async (req, res) => {
 
         const { id } = req.query; 
 
-        const conversation = await Conversation.findById(id).populate('lastMessage');
+        const conversation = await Conversation.findById(id).populate({
+            path: 'users',
+            select: 'firstName lastName'
+        }).populate('lastMessage');
 
         if(!conversation) {
             return res.status(404).json({ message: "Conversation Not Found" });
@@ -85,6 +88,25 @@ const checkIfConversationExists = async (req, res) => {
 
 }
 
+const archiveChat = async (req, res) => {
+
+    const { conversationId } = req.body;
+    
+    try {
+
+        const result = await Conversation.updateOne(
+            {_id: conversationId},
+            { $set: {isArchived: true }}
+        );
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        res.status(500).json({ message: "Failed to Archive Conversation", error });
+    }
+
+}
+
 const createConversation = async (req, res) => {
 
     try {
@@ -105,4 +127,4 @@ const createConversation = async (req, res) => {
 
 };
 
-export { getConversations, getConversationById, createConversation, checkIfConversationExists, getConversationByUsers };
+export { getConversations, getConversationById, createConversation, checkIfConversationExists, archiveChat, getConversationByUsers };

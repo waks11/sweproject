@@ -1,6 +1,6 @@
 import { SideBar } from "./components/side_bar/SideBar";
 import { AccountInfo } from "./components/account_page/AccountInfo";
-import axios from "axios";
+import { AdminInfo } from "./components/account_page/AdminInfo";
 import { useState, useContext } from "react";
 import { UserContext } from "./components/UserContext";
 
@@ -12,7 +12,7 @@ export const AccountPage = () => {
         <div className="flex">
             <SideBar />
             <div className="ml-16 p-6 w-full">
-                <AccountInfo userInfo={user}/>
+                {!user.admin ? (<AccountInfo userInfo={user}/>) : (<AdminInfo />)}
             </div>
         </div>
     );

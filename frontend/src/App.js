@@ -12,6 +12,7 @@ import { useContext } from 'react';
 import { UserContext } from './pages/components/UserContext';
 
 import AdminPage from './pages/AdminPage'; // Import the new AdminPage component
+import { AdminInfo } from './pages/components/account_page/AdminInfo';
 
 function App() {
   const { user, loading } = useContext(UserContext);

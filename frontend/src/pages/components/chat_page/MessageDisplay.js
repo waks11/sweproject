@@ -1,7 +1,6 @@
 import { React } from "react";
 import { UserContext } from "../UserContext";
 import { useContext } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Message = ({ message, isUser }) => {
     return(
@@ -24,9 +23,12 @@ const Message = ({ message, isUser }) => {
     );
 };
 
-const MessageDisplay = ({ messages/*, loadMore, hasMore */}) => {
+const MessageDisplay = ({ messages }) => {
     const { user } = useContext(UserContext);
     
+    const participants = [...new Set(messages.flatMap(message => [message.senderId, message.receiverId]))];
+    const [user1, user2] = participants;
+
     return(
         <div className="p-4">
             {/*
@@ -41,7 +43,9 @@ const MessageDisplay = ({ messages/*, loadMore, hasMore */}) => {
                     <Message 
                         key={index}
                         message={message.content}
-                        isUser={message.senderId === user.id} /* need to change this to when it matches the current user's ID */
+                        isUser={
+                            user.admin ? message.senderId === user1 : message.senderId === user.id
+                        } /* need to change this to when it matches the current user's ID */
                     />
                 ))}
             {/*

@@ -26,6 +26,8 @@ const ChatPage = ({ specificConversationId = null }) => {
     const [reportUserPopup, setReportUserPopup] = useState(false);
     const [isItemPoster, setIsItemPoster] = useState(false);
 
+    const scrollableRef = useRef(null);
+
     const socketRef = useRef(null);
 
     const fetchAllMessages = async () => {
@@ -120,6 +122,12 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     };
 
+    useEffect(() => {
+        if(scrollableRef.current) {
+            scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     // Sender is [0]
     // Receiver is [1]
     const handleSelectConversation = (conversation) => {
@@ -183,15 +191,26 @@ const ChatPage = ({ specificConversationId = null }) => {
             <div className="ml-[16rem] w-full h-full overflow-hidden p-6 flex flex-col relative">
                 {currentConversation.conversationId ? (
                     <>
-                        <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
-                            <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
-                        </div>
-                        <div className="flex-grow mt-16">
+                        {!currentConversation.isArchived ? (
+                            <div className="absolute top-0 left-4 w-[calc(100%-1rem)]">
+                                <ActionBar flagUserPopup={setReportUserPopup} archiveChatPopup={setDisplayRatingPopup} isItemPoster={isItemPoster}/>
+                            </div>
+                        ) : (
+                            <div className="absolute top-0 left-4 w-[calc(100%-1rem)] bg-gray-100 p-6">
+                                This chat is archived.
+                            </div>
+                        )}
+                        <div 
+                            className="scrollable flex-grow mt-16 overflow-y-auto"
+                            ref={scrollableRef}
+                        >
                             <MessageDisplay messages={messages} />
                         </div>
-                        <div className="flex-shrink-0">
-                            <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
-                        </div>
+                        {!currentConversation.isArchived &&
+                            <div className="flex-shrink-0">
+                                <MessageBar onSend={handleOnSend} currentConversation={currentConversation}/>
+                            </div>
+                        }
                     </>
                 ) : (
                     <div className="flex items-center justify-center h-full">
@@ -208,6 +227,16 @@ const ChatPage = ({ specificConversationId = null }) => {
             {reportUserPopup &&
                 <ReportUser onSubmit={handleFlagUser} setIsOpen={setReportUserPopup} />
             }
+
+            <style jsx>{`
+                .scrollable::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollable {
+                    scrollbar-width: none;  
+                    -ms-overflow-style: none;  
+                }
+            `}</style>
         </div>
     );
 };

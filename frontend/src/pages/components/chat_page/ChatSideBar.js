@@ -49,13 +49,15 @@ export const ChatSideBar = ({ selectConversation, specificConversationId = null 
             <div className="p-4 text-xl font-bold border-b border-gray-700">
                 Chats
             </div>
-            <ul className="flex-1 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-none">
+            <ul className="scrollable flex-1 overflow-y-auto max-h-[calc(100vh-4rem)]">
                 {conversations.map((conversation, index) => (   
                     <li
                         key={conversation._id}
-                        className={`p-3 cursor-pointer hover:bg-gray-700 ${
-                            activeChat === index ? "bg-gray-700" : ""
-                        }`}
+                        className={`p-3 cursor-pointer hover:bg-gray-700 
+                            ${activeChat === index ? "bg-gray-700" : (
+                                conversation.isArchived ? "bg-gray-900" : ""
+                            )}
+                        `}
                         onClick={() => {
                             setActiveChat(index);
                             selectConversation(conversation);
@@ -72,16 +74,6 @@ export const ChatSideBar = ({ selectConversation, specificConversationId = null 
                     </li>
                 ))}
             </ul>
-
-            <style jsx>{`
-                ul::-webkit-scrollbar {
-                    display: none;
-                }
-                ul {
-                    scrollbar-width: none;  
-                    -ms-overflow-style: none;  
-                }
-            `}</style>
         </div>
     );
 }

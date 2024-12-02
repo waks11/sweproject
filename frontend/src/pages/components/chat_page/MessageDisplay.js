@@ -1,7 +1,6 @@
 import { React } from "react";
 import { UserContext } from "../UserContext";
 import { useContext } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Message = ({ message, isUser }) => {
     return(
@@ -24,7 +23,7 @@ const Message = ({ message, isUser }) => {
     );
 };
 
-const MessageDisplay = ({ messages/*, loadMore, hasMore */}) => {
+const MessageDisplay = ({ messages }) => {
     const { user } = useContext(UserContext);
     
     const participants = [...new Set(messages.flatMap(message => [message.senderId, message.receiverId]))];

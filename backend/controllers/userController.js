@@ -2,7 +2,7 @@ import { User } from "../models/userModel.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
     }
 };
 
-const getUserProfile = (req, res) => {
+const getUserProfile = async (req, res) => {
 
     const { token } = req.cookies;
 
@@ -86,14 +86,28 @@ const getUserProfile = (req, res) => {
 
     try {
 
-        jwt.verify(token, process.env.JWT_SECRET, {}, (error, user) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (error, decodedToken) => {
             
             if(error) {
                 console.log("Error: ", error);
                 return res.status(500).json({ error: "Error verifying token" });
             }
 
-            res.json(user);
+            const user = await User.findById(decodedToken.id);
+
+            if(!user) {
+                return res.status(400).json({ error: "User not found" });
+            }
+
+            res.json({user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                admin: user.admin,
+                goodStanding: user.goodStanding,
+                score: user.score
+            }});
         });
 
     } catch (error) {

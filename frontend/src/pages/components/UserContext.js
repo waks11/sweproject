@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
             try {
                 const { data } = await axios.get('/api/users/getUser', { withCredentials: true});
 
-                setUser(data);
+                setUser(data.user);
             } catch (error) {
                 setUser(null);
                 console.error("Error Fetching User Profile: ", error);

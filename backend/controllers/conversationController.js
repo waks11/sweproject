@@ -12,7 +12,7 @@ const getConversations = async(req, res) => {
         })
         .populate({
             path: 'users',
-            select: 'firstName lastName'
+            select: 'firstName lastName score'
         })
         .populate('lastMessage').sort('-updatedAt');
 

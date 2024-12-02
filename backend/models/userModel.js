@@ -19,8 +19,8 @@ const userSchema = Schema({
     password: { type: String, required: true } ,
     admin: { type: Boolean, default: false },
     goodStanding: { type: Boolean, default: true },
-    score: { type: Number, default: 0 },
-    numOfRatings: { type: Number, default: 0 }
+    score: { type: Number, default: 5 },
+    numOfRatings: { type: Number, default: 1 }
 });
 
 export const User = mongoose.model('Users', userSchema, 'Users');

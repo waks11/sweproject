@@ -66,7 +66,8 @@ const loginUser = async (req, res) => {
                     lastName: user.lastName,
                     email: user.email,
                     admin: user.admin,
-                    goodStanding: user?.goodStanding
+                    goodStanding: user.goodStanding,
+                    score: user.score
                 }});
 
             } 

@@ -53,7 +53,7 @@ export const ChatSideBar = ({ selectConversation, specificConversationId = null 
                 {conversations.map((conversation, index) => (   
                     <li
                         key={conversation._id}
-                        className={`p-3 cursor-pointer hover:bg-gray-700 
+                        className={`p-3 cursor-pointer hover:bg-gray-700
                             ${activeChat === index ? "bg-gray-700" : (
                                 conversation.isArchived ? "bg-gray-900" : ""
                             )}
@@ -63,14 +63,21 @@ export const ChatSideBar = ({ selectConversation, specificConversationId = null 
                             selectConversation(conversation);
                         }}
                     >
-                        <p className="font-semibold">
-                            {conversation.users.filter((curUser) => curUser._id !== user.id)
-                                                .map((curUser) => `${curUser.firstName} ${curUser.lastName}`)
-                                                .join(", ")}
-                        </p>
-                        <p className="text-sm text-gray-400 line-clamp-2">
-                            {conversation.lastMessage?.content || "No response..."}
-                        </p>
+                        <div className="relative group">
+                            <p className="font-semibold">
+                                {conversation.users.filter((curUser) => curUser._id !== user.id)
+                                                    .map((curUser) => `${curUser.firstName} ${curUser.lastName}`)
+                                                    .join(", ")}
+                            </p>
+                            <p className="text-sm text-gray-400 line-clamp-2">
+                                {conversation.lastMessage?.content || "No response..."}
+                            </p>
+
+                            <div className="absolute top-0 left-[67%] ml-2 px-2 py-1 text-sm text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 z-10">
+                                Rating {conversation.users.filter((curUser) => curUser._id !== user.id)
+                                                            .map((curUser) => curUser.score)} / 5
+                            </div>
+                        </div>
                     </li>
                 ))}
             </ul>

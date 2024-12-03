@@ -20,6 +20,7 @@ const Login = () => {
     });
   };
 
+  // Checks if user's account info is valid; logs in if yes, does not log in if no
   const handleSubmit = async (e) => {
     e.preventDefault();
 

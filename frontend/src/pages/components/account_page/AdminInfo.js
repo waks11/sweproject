@@ -10,6 +10,8 @@ export const AdminInfo = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
+    // Display the first 10 reports in the DB upon opening the Admin page; also 
+    // sets up to add more if the admin wishes to see more
     const fetchReportsToDisplayOnStart = async () => {
 
         const response = await axios.get('/api/reports/getReports?page=1&limit=10');
@@ -25,6 +27,7 @@ export const AdminInfo = () => {
 
     }, []);
 
+    // Loads more reports from the database by appending to the current list
     const loadMoreReports = async () => {
 
         try {

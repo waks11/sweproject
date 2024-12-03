@@ -7,6 +7,7 @@ const AdminPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Display the admin dashboard to the admin page, and finding all users
   const fetchUsers = async () => {
     try {
       const response = await axios.get("/api/admin/dashboard");
@@ -19,6 +20,7 @@ const AdminPage = () => {
     }
   };
 
+  // Update the goodStanding value when Admin clicks on button
   const toggleGoodStanding = async (id, currentStatus) => {
     try {
       const response = await axios.put(`/api/admin/update-good-standing/${id}`, {

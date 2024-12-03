@@ -18,6 +18,7 @@ export const SearchPage = () => {
 
     const socketRef = useRef(null);
 
+    // Fetch 24 images to display to the page initially
     const fetchItemsToDisplayOnStart = async () => {
 
         const response = await axios.get(`/api/lostItems/getPage?page=1&limit=24`);
@@ -29,6 +30,7 @@ export const SearchPage = () => {
         setHasMore(has_more);
     }
 
+    // Displays initial posts, enables socket, and brings up any rating popups on start
     useEffect(() => {
 
         fetchItemsToDisplayOnStart();
@@ -53,6 +55,7 @@ export const SearchPage = () => {
 
     }, []); 
 
+    // When user has scrolled down sufficiently, call to load more pages from the database
     const loadMoreData = async () => {
         
         try {
@@ -74,7 +77,7 @@ export const SearchPage = () => {
     };
 
     const handleSearch = async ({description, location}) => { 
-        // the onSearch parameter for SearchBar that should run a semantic search and return a list of posts to display
+        // the onSearch parameter for SearchBar that runs a semantic search and returns a list of posts to display
         // this lists of posts will be sent to the items parameter of PostDisplay to be displayed 
 
         if (!description || (description == "" && location == "")) {
@@ -100,7 +103,7 @@ export const SearchPage = () => {
     };
 
     const handleMakePost = async ({userID, image, description, location}) => {
-        // onSearch parameter for MakePost that should create a post based off the given info
+        // onSearch parameter for MakePost that creates a post based off the given info
 
         const post_data = new FormData(); 
         post_data.append("user_id", userID);
@@ -140,6 +143,7 @@ export const SearchPage = () => {
         // })
     };
 
+    // Submits the user rating to the database
     const handleRateUserSubmit = async () => {
 
         if(!currentRatingRequest) return null;

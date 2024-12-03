@@ -31,25 +31,15 @@ const MessageDisplay = ({ messages }) => {
 
     return(
         <div className="p-4">
-            {/*
-            <InfiniteScroll
-                dataLength={messages.length}
-                next={loadMore}
-                hasMore={hasMore}
-                inverse
-                className="flex flex-col-reverse overflow-hidden"
-            >*/}
-                {messages.map((message, index) => (
-                    <Message 
-                        key={index}
-                        message={message.content}
-                        isUser={
-                            user.admin ? message.senderId === user1 : message.senderId === user.id
-                        } /* need to change this to when it matches the current user's ID */
-                    />
-                ))}
-            {/*
-            </InfiniteScroll> */}
+            {messages.map((message, index) => (
+                <Message 
+                    key={index}
+                    message={message.content}
+                    isUser={
+                        user.admin ? message.senderId === user1 : message.senderId === user.id
+                    } 
+                />
+            ))}
         </div>
     );
 };

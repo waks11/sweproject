@@ -30,6 +30,7 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     const socketRef = useRef(null);
 
+    // Fetch the messages from the current conversation
     const fetchAllMessages = async () => {
 
         const response = await axios.get(`/api/messages/getMessages?conversationId=${currentConversation.conversationId}`);
@@ -39,6 +40,7 @@ const ChatPage = ({ specificConversationId = null }) => {
         setMessages(curMessages);
     }   
 
+    // Create a socket that checks if users are online to immediately display new messages
     useEffect(() => {
         const socket = getSocket();
         socket.connect();
@@ -70,6 +72,7 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     }, []);
 
+    // Fetch messages and update socket if new messages are sent
     useEffect(() => {
 
         if(currentConversation.conversationId !== null) {
@@ -85,6 +88,7 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     }, [currentConversation])
 
+    // Create a new message and post to the database; also emit through the socket; display previous message to ChatSideBar
     const handleOnSend = async ({ conversationId, receiverId, content }) => {
 
         const newMessage = {
@@ -116,6 +120,7 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     };
 
+    // Allow for scrollable messages by checking if the height has increased
     useEffect(() => {
         if(scrollableRef.current) {
             scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
@@ -137,8 +142,6 @@ const ChatPage = ({ specificConversationId = null }) => {
 
     const handleFlagUser = () => {
         /* flag the user in the conversation that isn't the current user */
-        /* should send over the conversation id and reported user id over to the ReportUser.js file */
-        /* handleSubmit in the ReportUser.js file should use those ids along with the description and connect to admin's backend */
 
         const reportedUserId = (user.id === currentConversation.senderId) ? currentConversation.receiverId : currentConversation.senderId;
 

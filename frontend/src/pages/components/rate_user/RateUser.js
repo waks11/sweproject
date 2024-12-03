@@ -6,13 +6,13 @@ const RateUser = ({ onSubmit, setIsOpen }) => {
     const { user } = useContext(UserContext);
     const [rating, setRating] = useState(0);
 
+    // Updates the user's rating with the new rating given to them 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
         if(user.admin) {
             return;
-        }
-        /* onSubmit should set the chat to archived, and utilizing rating, you should be able to update the users' ratings */   
+        }  
 
         const { user_id } = await onSubmit();
 

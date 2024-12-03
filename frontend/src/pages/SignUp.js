@@ -22,6 +22,7 @@ const SignUp = () => {
     });
   };
 
+  // Check if user's account is invalid or already exists, and creates an account if it is valid
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

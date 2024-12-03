@@ -9,6 +9,8 @@ export const ChatSideBar = ({ selectConversation, specificConversationId = null 
     const [conversations, setConversations] = useState([]);
     const [activeChat, setActiveChat] = useState(null);
 
+    // By default, displays all conversations that a user is in on the ChatSideBar from the database.
+    // Users may also see specified IDs; these will also be added to the side display.
     const fetchAllConversations = async () => {
         const response = await axios.get(`/api/conversations/getAllConversations?user_id=${user.id}`);
         

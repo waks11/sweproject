@@ -10,6 +10,7 @@ const MessageBar = ({onSend, currentConversation}) => {
         setMessage(e.target.value);
     };
 
+    // Checks if a valid conversation exists, and then calls the send function to send the message currently in the MessageBar
     const sendMessage = (e) => {
         e.preventDefault();
 
@@ -29,6 +30,7 @@ const MessageBar = ({onSend, currentConversation}) => {
         setMessage("");
     }; 
 
+    // Remove the message bar if the conversation is archived
     if(currentConversation.isArchived) {
         return null;
     }

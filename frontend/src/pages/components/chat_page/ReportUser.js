@@ -6,6 +6,7 @@ const ReportUser = ({ onSubmit, setIsOpen }) => {
     const { user } = useContext(UserContext);
     const [description, setDescription] = useState("");
 
+    // Make a report if the user clicks on the report button in the action bar
     const handleSubmit = async (e) => {
         e.preventDefault();
 

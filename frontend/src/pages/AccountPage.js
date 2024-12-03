@@ -9,8 +9,6 @@ export const AccountPage = () => {
     const { user, loading } = useContext(UserContext);
 
     if(loading) return <div>Loading...</div>; 
-
-    console.log(user);
         
     return(
         <div className="flex">

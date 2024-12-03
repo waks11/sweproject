@@ -13,10 +13,9 @@ const MakePost = ({onPost}) => {
         setImage(e.target.files[0]);
     };
 
+    // Call onPost to upload image information to database
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // setUserID() - need to set userID with the logged user
 
         if(onPost) {
             await onPost({userID: user.id, image, description, location});

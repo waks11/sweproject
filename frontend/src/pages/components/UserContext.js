@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Fetches the user's profile; should be called upon login, and sets the global User 
     useEffect(() => {
 
         const fetchUserProfile = async () => {

@@ -94,12 +94,6 @@ const ChatPage = ({ specificConversationId = null }) => {
             content: content
         };
 
-        // const post_data = new FormData();
-        // post_data.append("conversationId", conversationId);
-        // post_data.append("senderId", user.id);
-        // post_data.append("receiverId", receiverId);
-        // post_data.append("content", content);
-
         try {
 
             await axios.post("/api/messages/sendMessage", newMessage, { headers: { 'Content': 'application/json' }});

@@ -8,11 +8,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Hugging Face model used for vector embeddings
 const embeddings = new HuggingFaceInferenceEmbeddings({
     apiKey: process.env.HUGGING_FACE_TOKEN,
     model: 'sentence-transformers/all-MiniLM-L6-v2'
 });
 
+// Convert user's description from text to vector embeddings
 async function getEmbeddings(description) {
 
     try {
@@ -27,22 +29,17 @@ async function getEmbeddings(description) {
 
 }
 
+// Add the new post to the database with vector embeddings
 const createPost = async (req, res) => {
-
-    console.log(req.file);
 
     const { user_id, description, location } = req.body;
 
-    const image_url = req.file?.location;
+    const image_url = req.file?.location; // Makes sure that the location exists first
 
     try {
         const {embeddings} = await getEmbeddings(description);
 
         const item = await LostItem.create({ user_id, image_url, description, location, embedding: embeddings });
-         
-        // const queryItem = await LostItem.findOne({ user_id: user_id });
-
-        // const embeddedItem = await EmbeddedItem.create({ text: completeDescription, embedding: embeddings, metadata: [{ source: queryItem.id }]});
 
         const returnItem = {user_id: item.user_id, image_url: item.image_url, description: item.description, location: item.location};
 
@@ -53,6 +50,7 @@ const createPost = async (req, res) => {
 
 };
 
+// Searchs by user's query semantically
 const getSemanticSearch = async (req, res) => {
 
     const { user_search } = req.query;
@@ -66,6 +64,7 @@ const getSemanticSearch = async (req, res) => {
 
         const collection = mongoose.connection.collection('LostItems');
 
+        // Create a vector store to allow us to use cosine similarity between embeddings
         const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
             collection,
             indexName: "vector_index",
@@ -73,10 +72,13 @@ const getSemanticSearch = async (req, res) => {
             embeddingKey: "embedding"
         });
 
+        // Only get top 3 results so that we try to get the most semantically similar results
         const top3Results = await vectorStore.similaritySearchWithScore(user_search, 3);
 
         let items = [];
 
+        // Checks to make sure that the cosine similarity is above a threshold of 0.7
+        // Ensures that the documents being returned actually have similarity
         for (const [doc, score] of top3Results) {
             if(score >= 0.70) {
 
@@ -98,6 +100,7 @@ const getSemanticSearch = async (req, res) => {
 
 }
 
+// Get an images's AWS S3 url given the id and description
 const getImageUrl = async(req, res) => {
 
     const { user_id, description } = req.query;
@@ -115,7 +118,7 @@ const getImageUrl = async(req, res) => {
 
 }
 
-
+// Uses Pagination to Return Items to the Frontend when needed
 const getPaginatedItems = async (req, res) => {
 
     const { page, limit } = req.query;
@@ -127,6 +130,7 @@ const getPaginatedItems = async (req, res) => {
         // page - 1 because we want to start from where previous page stopped
         const start = (page - 1) * limit;
 
+        // Go from the "start" item until we hit our limit and return those items
         const items = await LostItem.find().sort({ _id: -1 }).skip(start).limit(limit);
 
         const hasMore = (page * limit < totalDocuments);
@@ -141,6 +145,7 @@ const getPaginatedItems = async (req, res) => {
 
 }
 
+// Deletes from post from the database
 const deletePost = async (req, res) => {
     const { id } = req.params;
     const userId = req.query.user_id; // Get user ID from query parameters
@@ -163,10 +168,6 @@ const deletePost = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
-
-
-
 
 export { createPost, getSemanticSearch, getImageUrl, getPaginatedItems, deletePost };
 

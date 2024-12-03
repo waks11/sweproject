@@ -4,6 +4,7 @@ import { User } from "../models/userModel.js";
 
 const adminRouter = express.Router();
 
+// Checks to make sure the user is an admin
 adminRouter.get('/dashboard', verifyAdmin, async (req, res) => {
     try {
         const users = await User.find({ $or: [{ admin: false }, { admin: { $exists: false }}]}); 
@@ -13,6 +14,7 @@ adminRouter.get('/dashboard', verifyAdmin, async (req, res) => {
     }
 });
 
+// When admin decides a report is valid, they can change the user's goodStanding 
 adminRouter.put('/update-good-standing/:id', verifyAdmin, async (req, res) => {
     try {
         const { id } = req.params;

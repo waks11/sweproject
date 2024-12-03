@@ -1,6 +1,7 @@
 import { Message } from "../models/messages.js";
 import { Conversation } from "../models/conversations.js";
 
+// Gets all Messages associated with a given conversationId
 const getMessages = async (req, res) => {
     
     try {
@@ -15,6 +16,7 @@ const getMessages = async (req, res) => {
 
 };
 
+// Sends a message from one user to another with some content
 const sendMessage = async (req, res) => {
 
     try {

@@ -1,5 +1,6 @@
 import { Report } from "../models/reportModel.js";
 
+// Reports a user for suspicious user
 const createReport = async (req, res) => {
 
     const { reporterId, reportedUserId, reportedConversationId, reportedDescription } = req.body;
@@ -19,6 +20,8 @@ const createReport = async (req, res) => {
 
 };
 
+// Returns all reports that are currently in the database
+// Uses pagination for lazy loading on the frontend
 const getReports = async (req, res) => {
     
     const { page, limit } = req.query;
@@ -34,6 +37,8 @@ const getReports = async (req, res) => {
 
         const start = (page - 1) * limit;
 
+        // Since we have references to the User database here, we can populate the corresponding firstname
+        // and lastname for each id associated with this Report
         const reports = await Report.find().sort({ _id: -1 }).skip(start).limit(limit).populate({
             path: 'reporterId',
             select: 'firstName lastName'

@@ -12,6 +12,7 @@ dotenv.config();
 
 const itemRouter = express.Router();
 
+// Connect to S3
 const s3 = new S3Client({
     region: process.env.S3_BUCKET_REGION,
     credentials: {
@@ -20,6 +21,7 @@ const s3 = new S3Client({
     },
 });
 
+// Use multer as middleware to add the actual image to s3 while storing url in db
 const upload = multer({
 
     storage: multerS3({
@@ -36,12 +38,10 @@ const upload = multer({
 
 });
 
-
-
-
 itemRouter.post('/upload', upload.single('lostImage'), createPost);
 itemRouter.get('/search/semantic', getSemanticSearch);
 itemRouter.get('/getImageUrl', getImageUrl);
 itemRouter.get('/getPage', getPaginatedItems);
 itemRouter.delete('/delete/:id', deletePost);
+
 export default itemRouter;

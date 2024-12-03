@@ -1,6 +1,7 @@
 import { Conversation } from "../models/conversations.js";
 import mongoose from "mongoose";
 
+// Gets all conversations associated with user
 const getConversations = async(req, res) => {
 
     try {
@@ -24,6 +25,7 @@ const getConversations = async(req, res) => {
 
 };
 
+// Gets the conversation with the particular conversationId
 const getConversationById = async (req, res) => {
 
     try { 
@@ -46,6 +48,7 @@ const getConversationById = async (req, res) => {
 
 };
 
+// Gets conversation given the two users who are apart of the conversation
 const getConversationByUsers = async (req, res) => {
 
     try {
@@ -67,6 +70,7 @@ const getConversationByUsers = async (req, res) => {
 
 }
 
+// Check to see if we already have an existing conversation between the two
 const checkIfConversationExists = async (req, res) => {
 
     try {
@@ -88,6 +92,7 @@ const checkIfConversationExists = async (req, res) => {
 
 }
 
+// Archive chat so that it no longer is allowed to be accessed
 const archiveChat = async (req, res) => {
 
     const { conversationId } = req.body;
@@ -107,6 +112,7 @@ const archiveChat = async (req, res) => {
 
 }
 
+// Create a new conversation between the two users (associated with a particular item)
 const createConversation = async (req, res) => {
 
     try {

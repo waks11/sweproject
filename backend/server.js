@@ -12,21 +12,24 @@ import conversationRouter from "./routes/conversationRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 import reportRouter from "./routes/reportRouter.js";
 
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import adminRouter from "./routes/adminRouter.js";
 
 dotenv.config();
 
+// Create new express app and server
 const app = express();
 const server = http.createServer(app);
 
+// Setup sockets
 socketHandler(server);
 
+// Connect to frontend using CORS
 const corsOptions = {
     origin: "http://localhost:3000",
     credentials: true,
 };
 
+// Set up api use
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -45,6 +48,7 @@ app.use('/api/reports', reportRouter);
 
 const connectionString = process.env.MONGO_URI;
 
+// Connect to mongo backend and listen for events from sockets
 mongoose.connect(connectionString).then(() => {
     
     console.log("Connected to DB");
@@ -52,10 +56,6 @@ mongoose.connect(connectionString).then(() => {
     server.listen(process.env.PORT, () => {
         console.log(`Server Running on Port ${process.env.PORT}`);
     });    
-
-    // app.listen(process.env.PORT, () => {
-    //     console.log("Listening on Port", process.env.PORT)
-    // });
 
 }).catch((error) => {
     console.log(error);

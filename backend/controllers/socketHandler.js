@@ -2,15 +2,15 @@ import { Message } from "../models/messages.js";
 import { Conversation } from "../models/conversations.js";
 import { PendingRating } from "../models/ratingModel.js";
 
+// Map for corresponding id from db to socket_id
 const socketMap = new Map();
 
 const socketHandlers = (io, socket) => {
 
+    // Alerts receiving user, if online, that they have a new message
     const handleSendMessage = async ({ conversationId, senderId, receiverId, content }) => {
 
         try {
-            const newMessage = await Message.create({ conversationId, senderId, receiverId, content });
-
             await Conversation.findByIdAndUpdate(conversationId, {
                 lastMessage: newMessage._id,
                 updatedAt: Date.now(),
@@ -18,9 +18,10 @@ const socketHandlers = (io, socket) => {
 
             const receiverSockets = socketMap.get(receiverId) || [];
 
+            // Finds all curernt sockets connected to this conversation id and sends real-time receivedMessage event with the new Message
             receiverSockets.filter(({ conversationId: cid }) => cid === conversationId).forEach(({ socketId }) => {
                 io.to(socketId).emit('receiveMessage', newMessage);
-            })
+            });
 
             io.to(socket.id).emit('messageSent', newMessage);
 
@@ -30,10 +31,12 @@ const socketHandlers = (io, socket) => {
 
     };
 
+    // Useful if we want to show when the other user is typing
     const handleCurrentlyTyping = ({ conversationId, senderId }) => {
         io.to(conversationId).emit('typing', {senderId});
     };
 
+    // Useful for if we want to alert users when they have read the message or not
     const handleMessageRead = async ({ messageId, receiverId }) => {
 
         try {
@@ -53,17 +56,18 @@ const socketHandlers = (io, socket) => {
     const handleUserOnline = async ({ userId, conversationId }) => {
 
         console.log(`User ${userId} is online`);
-
+        
+        // As soon as they are online we add them to the socketMap
         const existingSockets = socketMap.get(userId) || [];
         existingSockets.push({ socketId: socket.id, conversationId });
         socketMap.set(userId, existingSockets);
-        // socketMap.set(userId, [...existingSockets, { socketId: socket.id, conversationId }]);
         
         if(conversationId) {
             const unreadMessages = await Message.find({ receiverId: userId, read: false });
             socket.emit('unreadMessages', unreadMessages);
         }
 
+        // Get any pending rating requests they might have had in the database and make them do it as soon as they sign in
         const ratings = await PendingRating.find({ receiverId: userId });
         ratings.forEach((ratingReq) => {
             socket.emit('rateUser', ratingReq);
@@ -72,6 +76,7 @@ const socketHandlers = (io, socket) => {
         await PendingRating.deleteMany({ receiverId: userId });
     };
 
+    // Maps users to their active conversations and associated socket connections
     const handleConversationActive = ({ userId, conversationId }) => {
 
         const sockets = socketMap.get(userId) || [];
@@ -87,19 +92,21 @@ const socketHandlers = (io, socket) => {
         socketMap.set(userId, sockets);
     };
 
+    // As soon as one user fills out the rating form, sends the other user a request to fill it out as well
     const handleRating = async ({ conversationId, raterId, receiverId }) => {
 
         try {
             const receiverSockets = socketMap.get(receiverId) || [];
-            console.log("hi", receiverSockets);
+            
+            // Check to see any sockets associated with the conversation
             if(receiverSockets.some(({ conversationId: cid }) => cid === conversationId)) {
-                console.log("other user online");
+                // Notify those socket ids that they have a rating request
                 receiverSockets.filter(({ conversationId: cid }) => cid === conversationId).forEach(({ socketId }) => {
                     io.to(socketId).emit('userRated', { raterId });
                 });
             }
             else {
-                console.log("PendingRating creation");
+                // If not currently online then add it to the database and will be retrieved when user is online again
                 await PendingRating.create({ conversationId, raterId, receiverId });
             }
 

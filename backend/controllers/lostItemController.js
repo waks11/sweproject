@@ -77,10 +77,10 @@ const getSemanticSearch = async (req, res) => {
 
         let items = [];
 
-        // Checks to make sure that the cosine similarity is above a threshold of 0.7
+        // Checks to make sure that the cosine similarity is above a threshold of 0.63
         // Ensures that the documents being returned actually have similarity
         for (const [doc, score] of top3Results) {
-            if(score >= 0.70) {
+            if(score >= 0.63) {
 
                 items.push({
                     user_id: doc.metadata.user_id,

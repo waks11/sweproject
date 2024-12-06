@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install-all": "npm install --workspaces",
     "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\"",
     "sever": "npm run dev --prefix backend",
     "client": "npm start --prefix frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

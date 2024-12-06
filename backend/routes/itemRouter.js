@@ -13,12 +13,13 @@ dotenv.config();
 const itemRouter = express.Router();
 
 // Connect to S3
+// Only uncomment out the line if you are an IAM user a part of the organization
 const s3 = new S3Client({
     region: process.env.S3_BUCKET_REGION,
     credentials: {
         accessKeyId: process.env.S3_ACCESS_KEY,
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-        sessionToken: process.env.S3_SESSION_TOKEN // Comment out if you are the root user
+        // sessionToken: process.env.S3_SESSION_TOKEN
     },
 });
 

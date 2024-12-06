@@ -26,8 +26,8 @@ const AdminPage = () => {
       const response = await axios.put(`/api/admin/update-good-standing/${id}`, {
         goodStanding: !currentStatus,
       });
-
       
+      // For the user that was changed, update their goodStanding attribute
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === id ? { ...user, goodStanding: response.data.goodStanding } : user

@@ -18,6 +18,7 @@ const s3 = new S3Client({
     credentials: {
         accessKeyId: process.env.S3_ACCESS_KEY,
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        sessionToken: process.env.S3_SESSION_TOKEN // Comment out if you are the root user
     },
 });
 

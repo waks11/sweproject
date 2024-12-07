@@ -30,9 +30,11 @@ const SignUp = () => {
       
       if(response.data.error && response.data.error === "User Already Exists") {
         toast.error(response.data.error);
+        alert("Unable to make account. Please try again with valid credentials.");
       }
       else if(response.data.error) {
         toast.error(response.data.error);
+        alert("Unable to make account. Please try again with valid credentials.");
       }
       else {
         toast.success("Signed Up Successfully");
@@ -42,6 +44,7 @@ const SignUp = () => {
 
     } catch (error) {
       console.error('Error signing up:', error.response?.data);
+      alert("Unable to make account. Please try again with valid credentials.");
     }
 
     // On success, perform

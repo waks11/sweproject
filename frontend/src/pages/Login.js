@@ -45,6 +45,7 @@ const Login = () => {
 
       console.error("Error Logging In", error);
       toast.error("Login Failed. Please Try Again");
+      alert("Login Failed. Please Try Again with Valid Credentials.");
 
     }
 

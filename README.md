@@ -1,4 +1,5 @@
 # UF Lost and Found
+By: Keerat Kohli, Adam Cheng, Alejandro Wakszol
 
 While most of UF’s community is well-organized and detail-oriented, everyone has had the anxiety that comes from misplacing an item and being unable to find it. With the size of UF easily covering over 2000 acres, determining where one’s lost belongings are can be daunting. With the current system, searching has to take place by going through multiple buildings, and either asking the building management for any lost items or manually searching alone. Thus, we created UF Lost and Found as a web application designed to help our campus community easily recover their lost items. UF Lost and Found serves as a centralized hub that will allow users to upload any lost items, and for those that have lost items to simply connect with the person that found their item, and meet up to get their item back. Utilizing tools such as artificial intelligence and user validation, UF Lost and Found also aims to create a convenient tool to quickly browse and converse with users, while remaining accessible and safe to all UF students and faculty.
 

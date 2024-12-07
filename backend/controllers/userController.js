@@ -24,7 +24,12 @@ const createUser = async (req, res) => {
 
             res.status(200).json(user);
         } catch (error) {
-            res.status(400).json({ error: "User Already Exists"});
+            if(error.name === 'ValidationError') {
+                res.status(400).json({ error: "Not a valid ufl email" });
+            }
+            else {
+                res.status(400).json({ error: "User Already Exists"});
+            }   
         }
         
         
